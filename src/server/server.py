@@ -54,7 +54,7 @@ class UDPServer:
             resp = self.exit_game(req)
         elif req["message_type"] == 11:
             resp = self.store_move(req)
-            # resp = self.game_state(req)
+            resp = self.game_state(req)
         else:
             resp = {
                 "sender": 0,
@@ -63,8 +63,7 @@ class UDPServer:
         resp = str(resp)
         self.printwt(f'[ RESPONSE to {client_address} ]')
         self.sock.sendto(resp.encode('utf-8'), client_address)
-        print(self.games)
-        print(self.users)
+
         print('\n', resp, '\n')
 
     def wait_for_client(self):
