@@ -53,7 +53,8 @@ class UDPServer:
         elif req["message_type"] == 9:
             resp = self.exit_game(req)
         elif req["message_type"] == 11:
-            resp = self.game_state(req)
+            resp = self.store_move(req)
+            # resp = self.game_state(req)
         else:
             resp = {
                 "sender": 0,
@@ -130,8 +131,10 @@ class UDPServer:
         if self.games[game_id]["players_num"] < 2:
             if self.games[game_id]["player_1"] == "":
                 self.games[game_id]["player_1"] = self.users[req["user_id"]]
+                self.games[game_id]["p1"].append([5, 5])
             else:
                 self.games[game_id]["player_2"] = self.users[req["user_id"]]
+                self.games[game_id]["p2"].append([15, 15])
 
             self.games[game_id]["players_num"] += 1
 
@@ -185,7 +188,12 @@ class UDPServer:
                 "game_name": req["game_name"],
                 "players_num": 0,
                 "player_1": "",
-                "player_2": ""
+                "player_2": "",
+                "d1": "",
+                "d2": "",
+                "snake1": [],
+                "snake2": [],
+                "food": (10, 10)
             }
             return {
                 "sender": 0,
@@ -216,17 +224,57 @@ class UDPServer:
 
         return -1
 
-    " GAME LOGIC "
-    '''
-    def update_game_state(self, request):
-        curr_game = self.games[request["name"]]
-        if "d1" in request:
-            curr_game["d1"] = request["d1"]
-        elif "d2" in request:
-            curr_game["d2"] = request["d2"]
+    def store_move(self, req):
+        game_id = req["game_id"]
+        current_game = self.games[game_id]
+        if current_game["player1"] == self.users[req["user_id"]]:
+            if not self.direction_problem(current_game["d1"], req["d"]):
+                current_game["d1"] = req["d"]
+        elif current_game["player2"] == self.users[req["user_id"]]:
+            if not self.direction_problem(current_game["d2"], req["d"]):
+                current_game["d2"] = req["d"]
+        else:
+            return {
+                "success": 500
+            }
 
-        return self.game_loop(request["name"])
+        return {
+            "sucess": 200
+        }
 
+    @staticmethod
+    def direction_problem(old_direction, new_direction):
+        if (old_direction == "u" and new_direction == "d") or (old_direction == "d" and new_direction == "u"):
+            return False
+        elif (old_direction == "r" and new_direction == "l") or (old_direction == "l" and new_direction == "r"):
+            return False
+        return True
+
+    def process_game(self, game_id):
+
+        curr_game = self.games[game_id]
+        s1 = curr_game["snake1"]
+        s2 = curr_game["snake2"]
+        d1 = curr_game["d1"]
+        d2 = curr_game["d2"]
+        food = curr_game["food"]
+
+        p1_eat_food, p2_eat_food, new_food = self.check_food(s1, s2, food)
+
+        if s1:
+            s1 = self.move_snake(s1, d1, p1_eat_food)
+        if s2:
+            s2 = self.move_snake(s2, d2, p2_eat_food)
+
+        p1_collision, p2_collision = self.check_collisions(s1, s2)
+
+        curr_game["p1"] = s1
+        curr_game["p2"] = s2
+        curr_game["food"] = new_food
+        curr_game["p1_game_over"] = p1_collision
+        curr_game["p2_game_over"] = p2_collision
+
+        self.games[game_id] = curr_game
 
     @staticmethod
     def move(point, direction):
@@ -239,78 +287,45 @@ class UDPServer:
         elif direction == "l":
             return point[0], point[1]-1
 
-    def move_snakes(self, p1, p2, d1, d2, p1_eat_food, p2_eat_food):
-        if not p1_eat_food and len(p1) > 1:
-            p1 = p1[:-1]
-        if not p2_eat_food and len(p2) > 1:
-            p2 = p2[:-1]
+    def move_snake(self, snake, direction, eat_food):
 
-        head1 = p1[0]
-        new_head1 = self.move(head1, d1)
-        if len(p1) > 1:
-            if new_head1 == p1[1]:
-                pass
-            else:
-                p1.insert(0, new_head1)
+        new_head = self.move(snake[0], direction)
+        snake.insert(0, new_head)
 
-        head2 = p2[0]
-        new_head2 = self.move(head2, d2)
-        if len(p2) > 1:
-            if new_head2 == p2[1]:
-                pass
-            else:
-                p2.insert(0, new_head2)
+        if not eat_food:
+            snake = snake[:-1]
 
-        return p1, p2
+        return snake
 
-    def check_collisions(self, p1, p2):
+    def check_collisions(self, s1, s2):
         p1_collision, p2_collision = 0, 0
-        if p1[0][0] < 0 or p1[0][0] > self.game_shape[0] or p1[0][1] < 0 or p1[0][1] > self.game_shape[1]:
-            p1_collision = 1
-        if p2[0][0] < 0 or p2[0][0] > self.game_shape[0] or p2[0][1] < 0 or p2[0][1] > self.game_shape[1]:
-            p2_collision = 1
+        if s1:
+            if s1[0][0] < 0 or s1[0][0] > self.game_shape[0] or s1[0][1] < 0 or s1[0][1] > self.game_shape[1]:
+                p1_collision = 1
+        if s2:
+            if s2[0][0] < 0 or s2[0][0] > self.game_shape[0] or s2[0][1] < 0 or s2[0][1] > self.game_shape[1]:
+                p2_collision = 1
 
-        if p1[0] in p2:
+        if s1[0] in s2:
             p1_collision = 1
-        if p2[0] in p1:
+        if s2[0] in s1:
             p2_collision = 1
         return p1_collision, p2_collision
 
-    def check_food(self, p1, p2, food):
+    def check_food(self, s1, s2, food):
 
         while True:
             new_food = (random.randint(0, self.game_shape[0]-1), random.randint(0, self.game_shape[0]-1))
-            if new_food not in p1 and new_food not in p2:
+            if new_food not in s1 and new_food not in s2:
                 break
-
-        if p1[0] == food:
-            return True, False, new_food
-        elif p2[0] == food:
-            return False, True, new_food
+        if s1:
+            if s1[0] == food:
+                return True, False, new_food
+        if s2:
+            if s2[0] == food:
+                return False, True, new_food
 
         return False, False, food
-
-    def game_loop(self, game_name):
-
-        curr_game = self.games[game_name]
-        p1 = curr_game["p1"]
-        p2 = curr_game["p2"]
-        d1 = curr_game["d1"]
-        d2 = curr_game["d2"]
-        food = curr_game["food"]
-
-        p1_eat_food, p2_eat_food, new_food = self.check_food(p1, p2, food)
-        #p1, p2 = self.move_snakes(p1, p2, d1, d2, p1_eat_food, p2_eat_food)
-        p1_collision, p2_collision = self.check_collisions(p1, p2)
-
-        curr_game["p1"] = p1
-        curr_game["p2"] = p2
-        curr_game["food"] = new_food
-        curr_game["p1_game_over"] = p1_collision
-        curr_game["p2_game_over"] = p2_collision
-
-        return str(curr_game)
-    '''
 
 
 def main():
