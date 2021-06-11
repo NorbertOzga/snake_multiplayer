@@ -84,7 +84,8 @@ class UDPServer:
         self.printwt('Shutting down server...')
         self.sock.close()
 
-    def register_user(self, nickname):
+    def register_user(self, req):
+        nickname = req["nickname"]
         if nickname not in self.users.values():
             user_id = self.get_new_user_id()
             if user_id != -1:
