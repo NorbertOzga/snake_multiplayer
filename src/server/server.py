@@ -62,6 +62,8 @@ class UDPServer:
         resp = str(resp)
         self.printwt(f'[ RESPONSE to {client_address} ]')
         self.sock.sendto(resp.encode('utf-8'), client_address)
+        print(self.games)
+        print(self.users)
         print('\n', resp, '\n')
 
     def wait_for_client(self):
@@ -214,7 +216,7 @@ class UDPServer:
         return -1
 
     " GAME LOGIC "
-
+    '''
     def update_game_state(self, request):
         curr_game = self.games[request["name"]]
         if "d1" in request:
@@ -224,7 +226,7 @@ class UDPServer:
 
         return self.game_loop(request["name"])
 
-    '''
+
     @staticmethod
     def move(point, direction):
         if direction == "u":
