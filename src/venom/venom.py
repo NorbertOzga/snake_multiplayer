@@ -189,4 +189,4 @@ class Message:
         if self.header is None or self.body is None:
             raise ValueError("Header or body is None.")
 
-        return self.header.to_bytes() + self.body.to_bytes()
+        return self.header.to_bytes() + self.body.to_bytes(self.header.message_type)
