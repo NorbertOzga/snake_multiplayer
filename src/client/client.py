@@ -28,7 +28,7 @@ FOOD_COLOR=(255,127,0)
 
 # Template server and its address configuration
 SERVER_ADDRESS=	"127.0.0.1"
-SERVER_PORT=	1987
+SERVER_PORT=	10000
 
 # Creating window
 DISPLAY=pygame.display.set_mode((SIZE_X*POINT_SIZE,SIZE_Y*POINT_SIZE+16))
@@ -81,12 +81,138 @@ def generateSnake(snakeData,color):
 		pygame.draw.rect(DISPLAY,color,(point[0]*POINT_SIZE,point[1]*POINT_SIZE,POINT_SIZE,POINT_SIZE))
 
 # Initial message to the server
-sock.sendto("CLIENT".encode(),SERVER)
+# sock.sendto("CLIENT".encode(),SERVER)
 
 # Additional variables
 lastData=None
 
-# Main loop
+# Message composer
+def composeMessage(message_type=None, nickname=None, user_id=None, \
+					game_name=None, game_id=None, d=None):
+	temp={}
+	temp["sender"]=1
+	if message_type:		
+		temp["message_type"]=message_type
+	if nickname:
+		temp["nickname"]=nickname
+	if user_id:
+		temp["user_id"]=user_id
+	if game_name:
+		temp["game_name"]=game_name
+	if game_id:
+		temp["game_id"]=game_id
+	if d:
+		temp["d"]=d
+	return json.dumps(temp)
+
+# Sending messages
+def sendMessage(message):
+	sock.sendto(message.encode(),SERVER)
+
+# Properly getting messages
+def getMessage():
+	data,address=sock.recvfrom(1024)
+	data=data.decode("UTF-8").replace("\'","\"")
+	return json.loads(data)
+
+# Checks if message is 200 OK
+def messageOK(message):
+	try:
+		return message["response"]==200
+	except:
+		return message["success"]==200
+
+# Checks if message has expected type
+def messageType(message,message_type):
+	return message["message_type"]==message_type
+
+USER_ID=0
+GAME_ID=0
+
+# Temporary console part - managing nicks, games and joins
+
+# Nickname input while
+while True:
+	nick=input("Podaj nick: ")
+	sendMessage(composeMessage(1,nick))
+	inp=getMessage()
+	if messageType(inp,2):
+		if messageOK(inp):
+			print("Twoje ID:",inp["user_id"])
+			USER_ID=inp["user_id"]
+			break
+		else:
+			print("Wybrany nick jest już zajęty! Wybierz inny.")
+	else:
+		print("Uzyskano inny typ odpowiedzi niż oczekiwano. Koniec programu.")
+		exit(1)
+
+# Gets current game list
+while True:
+	sendMessage(composeMessage(3,user_id=USER_ID))
+	inp=getMessage()
+	if messageType(inp,4):
+		if messageOK(inp):
+			for game in inp["list_of_games"]:
+				print(game[0],"\t",\
+						game[1],"\t",\
+						game[2],"\t",\
+						game[3])
+		else:
+			print("Nie udało się uzyskać listy gier. Koniec programu.")
+			exit(2)
+	else:
+		print("Uzyskano inny typ odpowiedzi niż oczekiwano. Koniec programu.")
+		exit(1)
+	print("\n")
+	ch=input("N - nowa gra\tD - dołącz\tQ - wyjdź\t? ")
+	ch=ch.upper()
+	if(ch=="N"):
+		name=input("Nazwa gry: ")
+		sendMessage(composeMessage(5,user_id=USER_ID,game_name=name))
+		inp2=getMessage()
+		if messageType(inp2,6):
+			if messageOK(inp2):
+				pass
+			else:
+				print("Nie udało się utworzyć nowej gry.")
+		else:
+			print("Uzyskano inny typ odpowiedzi niż oczekiwano. Koniec programu.")
+			exit(1)
+	elif(ch=="D"):
+		game_id=int(input("ID gry: "))
+		sendMessage(composeMessage(7,user_id=USER_ID,game_id=game_id))
+		inp2=getMessage()
+		if messageType(inp2,8):
+			if messageOK(inp2):
+				print("Dołączono do gry #",game_id)
+				GAME_ID=game_id
+				break
+			else:
+				print("Nie udało się dołączyć do rozgrywki.")
+		else:
+			print("Uzyskano inny typ odpowiedzi niż oczekiwano. Koniec programu.")
+			exit(1)
+	elif(ch=="Q"):
+		exit(0)
+
+# Exit game loop (for tests only)
+while True:
+	ch=input("Q - opuść grę")
+	ch=ch.upper()
+	if ch=="Q":
+		sendMessage(composeMessage(9,user_id=USER_ID,game_id=GAME_ID))
+		inp=getMessage()
+		if messageType(inp,10):
+			if messageOK(inp):
+				print("Opuszczono rozgrywkę. Koniec programu.")
+				exit(0)
+			else:
+				print("Nie udało się opuścić rozgrywki.")
+		else:
+			print("Uzyskano inny typ odpowiedzi niż oczekiwano. Koniec programu.")
+
+# Old main game loop
 while True:
 	data, address=sock.recvfrom(128)
 	try:
@@ -107,13 +233,14 @@ while True:
 		drawPoints(input["pt"][0],input["pt"][1])
 	pressed_keys=pygame.key.get_pressed()
 	if pressed_keys[K_UP]:
-		print("UP")
+		out=composeMessage(11,user_id=USER_ID,game_id=GAME_ID,d="u")
 	if pressed_keys[K_DOWN]:
-		print("DOWN")
+		out=composeMessage(11,user_id=USER_ID,game_id=GAME_ID,d="d")
 	if pressed_keys[K_LEFT]:
-		print("LEFT")
+		out=composeMessage(11,user_id=USER_ID,game_id=GAME_ID,d="l")
 	if pressed_keys[K_RIGHT]:
-		print("RIGHT")
+		out=composeMessage(11,user_id=USER_ID,game_id=GAME_ID,d="r")
+	sendMessage(out)
 	pygame.display.update()
 	for event in pygame.event.get():
 		if event.type==QUIT:
