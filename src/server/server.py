@@ -190,6 +190,8 @@ class UDPServer:
                 "player_2": "",
                 "d1": "",
                 "d2": "",
+                "p1": [], # dodałem te dwie linijki, bo inaczej
+                "p2": [], # serwer sypał się przy dołączaniu
                 "snake1": [],
                 "snake2": [],
                 "food": (10, 10)
