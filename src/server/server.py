@@ -193,7 +193,7 @@ class UDPServer:
                 "d2": "",
                 "p1": [], # dodałem te dwie linijki, bo inaczej
                 "p2": [], # serwer sypał się przy dołączaniu
-                "food": (10, 10)
+                "f": (10, 10)
             }
             return {
                 "sender": 0,
@@ -260,7 +260,7 @@ class UDPServer:
         s2 = curr_game["p2"]
         d1 = curr_game["d1"]
         d2 = curr_game["d2"]
-        food = curr_game["food"]
+        food = curr_game["f"]
 
         p1_eat_food, p2_eat_food, new_food = self.check_food(s1, s2, food)
 
@@ -273,7 +273,7 @@ class UDPServer:
 
         curr_game["p1"] = s1
         curr_game["p2"] = s2
-        curr_game["food"] = new_food
+        curr_game["f"] = new_food
         curr_game["p1_game_over"] = p1_collision
         curr_game["p2_game_over"] = p2_collision
 
