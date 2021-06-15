@@ -246,7 +246,7 @@ class UDPServer:
     @staticmethod
     def direction_problem(old_direction, new_direction):
         if old_direction == "" or new_direction:
-            return True
+            return False
         if (old_direction == "u" and new_direction == "d") or (old_direction == "d" and new_direction == "u"):
             return False
         elif (old_direction == "r" and new_direction == "l") or (old_direction == "l" and new_direction == "r"):
