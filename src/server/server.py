@@ -229,10 +229,10 @@ class UDPServer:
     def store_move(self, req):
         game_id = req["game_id"]
         current_game = self.games[game_id]
-        if current_game["player1"] == self.users[req["user_id"]]:
+        if current_game["player_1"] == self.users[req["user_id"]]:
             if not self.direction_problem(current_game["d1"], req["d"]):
                 current_game["d1"] = req["d"]
-        elif current_game["player2"] == self.users[req["user_id"]]:
+        elif current_game["playe_r2"] == self.users[req["user_id"]]:
             if not self.direction_problem(current_game["d2"], req["d"]):
                 current_game["d2"] = req["d"]
         else:
