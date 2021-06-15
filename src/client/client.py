@@ -27,7 +27,7 @@ P2_C=(127,127,255)
 FOOD_COLOR=(255,127,0)
 
 # Template server and its address configuration
-SERVER_ADDRESS=	"127.0.0.1"
+SERVER_ADDRESS=	"20.86.147.135"
 SERVER_PORT=	10000
 
 # Creating window

@@ -54,6 +54,7 @@ class UDPServer:
             resp = self.exit_game(req)
         elif req["message_type"] == 11:
             resp = self.store_move(req)
+            self.process_game(game_id=req["game_id"])
             resp = self.game_state(req)
         else:
             resp = {
