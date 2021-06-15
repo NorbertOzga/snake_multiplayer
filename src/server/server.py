@@ -227,6 +227,7 @@ class UDPServer:
     def store_move(self, req):
         game_id = req["game_id"]
         current_game = self.games[game_id]
+        print(current_game)
         if current_game["player_1"] == self.users[req["user_id"]]:
             if not self.direction_problem(req["d"], current_game["d1"]):
                 current_game["d1"] = req["d"]
@@ -244,7 +245,7 @@ class UDPServer:
 
     @staticmethod
     def direction_problem(old_direction, new_direction):
-        if old_direction == "":
+        if old_direction == "" or new_direction:
             return True
         if (old_direction == "u" and new_direction == "d") or (old_direction == "d" and new_direction == "u"):
             return False
