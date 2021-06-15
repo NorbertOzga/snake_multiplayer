@@ -193,8 +193,6 @@ class UDPServer:
                 "d2": "",
                 "p1": [], # dodałem te dwie linijki, bo inaczej
                 "p2": [], # serwer sypał się przy dołączaniu
-                "snake1": [],
-                "snake2": [],
                 "food": (10, 10)
             }
             return {
@@ -255,8 +253,8 @@ class UDPServer:
     def process_game(self, game_id):
 
         curr_game = self.games[game_id]
-        s1 = curr_game["snake1"]
-        s2 = curr_game["snake2"]
+        s1 = curr_game["p1"]
+        s2 = curr_game["p2"]
         d1 = curr_game["d1"]
         d2 = curr_game["d2"]
         food = curr_game["food"]
