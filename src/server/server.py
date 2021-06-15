@@ -16,7 +16,7 @@ class UDPServer:
 
     def printwt(self, msg):
         ''' Print message with current date and time '''
-
+        print(self.games)
         current_date_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         print(f'[{current_date_time}] {msg}')
 
