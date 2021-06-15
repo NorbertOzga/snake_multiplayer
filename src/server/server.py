@@ -278,6 +278,7 @@ class UDPServer:
 
     @staticmethod
     def move(point, direction):
+        print(point, direction)
         if direction == "u":
             return point[0]+1, point[1]
         elif direction == "d":
@@ -288,7 +289,7 @@ class UDPServer:
             return point[0], point[1]-1
 
     def move_snake(self, snake, direction, eat_food):
-
+        print("snake", snake)
         new_head = self.move(snake[0], direction)
         print("new_head", new_head)
         snake.insert(0, new_head)
