@@ -6,7 +6,8 @@ from pygame.locals import *
 import sys
 import socket
 import json
-
+import time
+import errno
 # Initialization
 pygame.init()
 
@@ -15,8 +16,8 @@ FPS=30
 FramePerSec=pygame.time.Clock()
 
 # Game size (defines window size)
-SIZE_X=10
-SIZE_Y=10
+SIZE_X=25
+SIZE_Y=25
 POINT_SIZE=32
 
 # Colors
@@ -102,7 +103,7 @@ def composeMessage(message_type=None, nickname=None, user_id=None, \
 	if game_id:
 		temp["game_id"]=game_id
 	if d:
-		temp["d"]=d
+		temp["d"]= d
 	return json.dumps(temp)
 
 # Sending messages
@@ -196,55 +197,55 @@ while True:
 	elif(ch=="Q"):
 		exit(0)
 
-# Exit game loop (for tests only)
-while True:
-	ch=input("Q - opuść grę")
-	ch=ch.upper()
-	if ch=="Q":
-		sendMessage(composeMessage(9,user_id=USER_ID,game_id=GAME_ID))
-		inp=getMessage()
-		if messageType(inp,10):
-			if messageOK(inp):
-				print("Opuszczono rozgrywkę. Koniec programu.")
-				exit(0)
-			else:
-				print("Nie udało się opuścić rozgrywki.")
-		else:
-			print("Uzyskano inny typ odpowiedzi niż oczekiwano. Koniec programu.")
-
 # Old main game loop
+last_key = "r"
 while True:
-	data, address=sock.recvfrom(128)
-	try:
-		input=json.loads(data)
-	except:
-		input=lastData
-	if input!=None:
-		if lastData!=None:
-			generateSnake(lastData["p1"],WHITE)
-			generateSnake(lastData["p2"],WHITE)
-			drawFood(lastData["f"][0],lastData["f"][1],WHITE)
-			lastData=input
-		else:
-			lastData=input
-		generateSnake(input["p1"],P1_C)
-		generateSnake(input["p2"],P2_C)
-		drawFood(input["f"][0],input["f"][1],FOOD_COLOR)
-		drawPoints(input["pt"][0],input["pt"][1])
+
 	pressed_keys=pygame.key.get_pressed()
 	if pressed_keys[K_UP]:
 		out=composeMessage(11,user_id=USER_ID,game_id=GAME_ID,d="u")
-	if pressed_keys[K_DOWN]:
+		last_key = "u"
+	elif pressed_keys[K_DOWN]:
 		out=composeMessage(11,user_id=USER_ID,game_id=GAME_ID,d="d")
-	if pressed_keys[K_LEFT]:
+		last_key = "d"
+	elif pressed_keys[K_LEFT]:
 		out=composeMessage(11,user_id=USER_ID,game_id=GAME_ID,d="l")
-	if pressed_keys[K_RIGHT]:
+		last_key = "l"
+	elif pressed_keys[K_RIGHT]:
 		out=composeMessage(11,user_id=USER_ID,game_id=GAME_ID,d="r")
-	sendMessage(out)
-	pygame.display.update()
+		last_key = "r"
+	else:
+		out = composeMessage(11, user_id=USER_ID, game_id=GAME_ID, d=last_key)
 	for event in pygame.event.get():
 		if event.type==QUIT:
 			pygame.quit()
 			sock.close()
 			sys.exit()
+	print("out", out)
+	sendMessage(out)
+	pygame.display.update()
 	FramePerSec.tick(FPS)
+	print("GAME")
+	time.sleep(0.2)
+
+	data, address = sock.recvfrom(1024)
+
+	try:
+		print(data.decode('utf-8'))
+		input = eval(data.decode('utf-8'))["game_state"]
+	except:
+		input = lastData
+
+	print(input)
+	if input != None:
+		if lastData != None:
+			generateSnake(lastData["p1"], WHITE)
+			generateSnake(lastData["p2"], WHITE)
+			drawFood(lastData["f"][0], lastData["f"][1], WHITE)
+			lastData = input
+		else:
+			lastData = input
+		generateSnake(input["p1"], P1_C)
+		generateSnake(input["p2"], P2_C)
+		drawFood(input["f"][0], input["f"][1], FOOD_COLOR)
+		#drawPoints(input["pt"][0], input["pt"][1])
