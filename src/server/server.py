@@ -311,11 +311,12 @@ class UDPServer:
         if s2:
             if s2[0][0] < 0 or s2[0][0] > self.game_shape[0] or s2[0][1] < 0 or s2[0][1] > self.game_shape[1]:
                 p2_collision = 1
-
-        if s1[0] in s2:
-            p1_collision = 1
-        if s2[0] in s1:
-            p2_collision = 1
+        if s1:
+            if s1[0] in s2:
+                p1_collision = 1
+        if s2:
+            if s2[0] in s1:
+                p2_collision = 1
         return p1_collision, p2_collision
 
     def check_food(self, s1, s2, food):
