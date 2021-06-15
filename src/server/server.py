@@ -248,10 +248,10 @@ class UDPServer:
         if old_direction == "" or new_direction == "":
             return False
         if (old_direction == "u" and new_direction == "d") or (old_direction == "d" and new_direction == "u"):
-            return False
+            return True
         elif (old_direction == "r" and new_direction == "l") or (old_direction == "l" and new_direction == "r"):
-            return False
-        return True
+            return True
+        return False
 
     def process_game(self, game_id):
 
