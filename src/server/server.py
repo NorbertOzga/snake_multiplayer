@@ -108,7 +108,7 @@ class UDPServer:
             return {
                 "sender": 0,
                 "message_type": 4,
-                "success": 500
+                "response": 500
             }
 
         game_info_list = []
@@ -122,7 +122,7 @@ class UDPServer:
             "message_type": 4,
             "number_of_games": len(game_info_list),
             "list_of_games": game_info_list,
-            "success": 200
+            "response": 200
         }
 
     def join_game(self, req):
@@ -171,13 +171,13 @@ class UDPServer:
                 "sender": 0,
                 "message_type": 12,
                 "game_state": self.games[req["game_id"]],
-                "success": 200
+                "response": 200
             }
         else:
             return {
                 "sender": 0,
                 "message_type": 12,
-                "success": 500
+                "response": 500
             }
 
     def create_game(self, req):
@@ -236,11 +236,11 @@ class UDPServer:
                 current_game["d2"] = req["d"]
         else:
             return {
-                "success": 500
+                "response": 500
             }
 
         return {
-            "sucess": 200
+            "response": 200
         }
 
     @staticmethod
