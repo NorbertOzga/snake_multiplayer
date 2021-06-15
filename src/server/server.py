@@ -228,10 +228,10 @@ class UDPServer:
         game_id = req["game_id"]
         current_game = self.games[game_id]
         if current_game["player_1"] == self.users[req["user_id"]]:
-            if not self.direction_problem(current_game["d1"], req["d"]):
+            if not self.direction_problem(req["d"], current_game["d1"]):
                 current_game["d1"] = req["d"]
         elif current_game["playe_r2"] == self.users[req["user_id"]]:
-            if not self.direction_problem(current_game["d2"], req["d"]):
+            if not self.direction_problem(req["d"], current_game["d2"]):
                 current_game["d2"] = req["d"]
         else:
             return {
