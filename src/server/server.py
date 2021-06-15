@@ -290,6 +290,7 @@ class UDPServer:
     def move_snake(self, snake, direction, eat_food):
 
         new_head = self.move(snake[0], direction)
+        print("new_head", new_head)
         snake.insert(0, new_head)
 
         if not eat_food:
