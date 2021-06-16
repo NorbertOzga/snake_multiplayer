@@ -144,7 +144,7 @@ GAME_ID=0
 while True:
 	nick=input("Podaj nick: ")
 	MYNAME = nick
-	sendMessage(composeMessage(1,nick))
+	sendMessage(composeMessage(MessageType.LOGIN_CLIENT,nick))
 	inp=getMessage()
 	if messageType(inp,2):
 		if messageOK(inp):
