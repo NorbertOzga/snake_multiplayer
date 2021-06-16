@@ -193,7 +193,8 @@ class UDPServer:
                 "d2": "",
                 "p1": [], # dodałem te dwie linijki, bo inaczej
                 "p2": [], # serwer sypał się przy dołączaniu
-                "f": (10, 10)
+                "f": (10, 10),
+                "pt": [0, 0]
             }
             return {
                 "sender": 0,
@@ -263,7 +264,10 @@ class UDPServer:
         food = curr_game["f"]
 
         p1_eat_food, p2_eat_food, new_food = self.check_food(s1, s2, food)
-
+        if p1_eat_food:
+            curr_game["pt"][0] += 10
+        if p2_eat_food:
+            curr_game["pt"][1] += 10
         if s1:
             s1 = self.move_snake(s1, d1, p1_eat_food)
         if s2:

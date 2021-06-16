@@ -30,7 +30,7 @@ FOOD_COLOR=(255,127,0)
 # Template server and its address configuration
 SERVER_ADDRESS=	"20.86.147.135"
 SERVER_PORT=	10000
-
+MYNAME = ""
 # Creating window
 DISPLAY=pygame.display.set_mode((SIZE_X*POINT_SIZE,SIZE_Y*POINT_SIZE+16))
 DISPLAY.fill(WHITE)
@@ -135,6 +135,7 @@ GAME_ID=0
 # Nickname input while
 while True:
 	nick=input("Podaj nick: ")
+	MYNAME = nick
 	sendMessage(composeMessage(1,nick))
 	inp=getMessage()
 	if messageType(inp,2):
@@ -226,7 +227,7 @@ while True:
 	pygame.display.update()
 	FramePerSec.tick(FPS)
 	print("GAME")
-	time.sleep(0.2)
+	time.sleep(0.1)
 
 	data, address = sock.recvfrom(1024)
 
@@ -248,4 +249,9 @@ while True:
 		generateSnake(input["p1"], P1_C)
 		generateSnake(input["p2"], P2_C)
 		drawFood(input["f"][0], input["f"][1], FOOD_COLOR)
-		#drawPoints(input["pt"][0], input["pt"][1])
+		drawPoints(input["pt"][0], input["pt"][1])
+
+	if MYNAME == input['player_1'] and input['p1_game_over'] ==1:
+		break
+	if MYNAME == input['player_2'] and input['p1_game_over'] ==1:
+		break
