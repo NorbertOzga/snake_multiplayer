@@ -91,10 +91,31 @@ class Body:
             body.data["user_id"] = user_id
 
         elif message_type == MessageType.LIST_GAMES_CLIENT:
-            pass
+            user_id = struct.unpack("!H", body_bytes)
+
+            body.data["user_id"] = user_id
 
         elif message_type == MessageType.LIST_GAMES_SERVER:
-            pass
+            games_num = struct.unpack("!H", body_bytes[:2])
+            
+            last_byte_num = 2
+            for i in range(games_num):
+                game_id, can_join, name_len = struct.unpack(
+                    "!H?b", body_bytes[last_byte_num:last_byte_num+4]
+                )
+
+                game_name = body_bytes[
+                    last_byte_num+4:last_byte_num+4+name_len
+                ].decode("ascii")
+
+                last_byte_num += 4 + name_len
+
+                body.data["games"].append({
+                    "game_id": game_id,
+                    "can_join": can_join,
+                    "game_name": game_name,
+                })
+
 
         elif message_type == MessageType.JOIN_GAME_CLIENT:
             user_id, game_id = struct.unpack("!HH", body_bytes)
@@ -160,10 +181,23 @@ class Body:
             return response
 
         elif message_type == MessageType.LIST_GAMES_CLIENT:
-            pass
+            response = struct.pack("!H", self.data["user_id"])
+
+            return response
 
         elif message_type == MessageType.LIST_GAMES_SERVER:
-            pass
+            response = struct.pack("!H", len(self.data["games"]))
+            
+            for game in self.data["games"]:
+                response += struct.pack(
+                    "!H?b", 
+                    game["game_id"],
+                    game["can_join"],
+                    len(game["game_name"]),
+                )
+                response += game["game_name"].encode("ascii")
+
+            return response
 
         elif message_type == MessageType.JOIN_GAME_CLIENT:
             return struct.pack("!HH", self.data["user_id"], self.data["game_id"])
