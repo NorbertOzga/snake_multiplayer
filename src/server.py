@@ -182,6 +182,8 @@ class UDPServer:
             body.data["game_id"] = game_id
             body.data["p1_direction"] = self.games[game_id]["p1_direction"].encode("ascii")
             body.data["p2_direction"] = self.games[game_id]["p2_direction"].encode("ascii")
+            body.data["p1_snake"] = self.games[game_id]["p1_snake"]
+            body.data["p2_snake"] = self.games[game_id]["p2_snake"]
             body.data["food"] = self.games[game_id]["food"]
             body.data["pt1"] = self.games[game_id]["pt1"]
             body.data["pt2"] = self.games[game_id]["pt2"]
