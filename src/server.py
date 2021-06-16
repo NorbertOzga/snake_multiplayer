@@ -50,7 +50,7 @@ class UDPServer:
         elif req.header.message_type == MessageType.CREATE_GAME_CLIENT:
             resp = self.create_game(req.body.data)
         elif req.header.message_type == MessageType.JOIN_GAME_CLIENT:
-            resp = self.join_game(req, client_address)
+            resp = self.join_game(req.body.data, client_address)
         elif req.header.message_type == MessageType.EXIT_GAME_CLIENT:
             resp = self.exit_game(req.body.data)
         elif req.header.message_type == MessageType.SEND_MOVE:
