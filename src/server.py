@@ -43,7 +43,6 @@ class UDPServer:
         self.printwt(f'[ REQUEST from {client_address} ]')
         print('\n', req, '\n')
 
-        req = eval(req)
         if req.header.message_type == MessageType.LOGIN_CLIENT:
             resp = self.register_user(req.data)
         elif req.header.message_type == MessageType.LIST_GAMES_CLIENT:
