@@ -180,8 +180,10 @@ class UDPServer:
             body = Body()
             body.data["operation_success"] = b'\x20'
             body.data["game_id"] = game_id
-            body.data["p1_direction"] = self.games[game_id]["p1_direction"]
-            body.data["p2_direction"] = self.games[game_id]["p2_direction"]
+            body.data["p1_direction"] = self.games[game_id]["p1_direction"].encode("ascii")
+            body.data["p2_direction"] = self.games[game_id]["p2_direction"].encode("ascii")
+            body.data["p1_snake"] = self.games[game_id]["p1_snake"]
+            body.data["p2_snake"] = self.games[game_id]["p2_snake"]
             body.data["food"] = self.games[game_id]["food"]
             body.data["pt1"] = self.games[game_id]["pt1"]
             body.data["pt2"] = self.games[game_id]["pt2"]
@@ -256,13 +258,14 @@ class UDPServer:
         game_id = data["game_id"]
         current_game = self.games[game_id]
         if current_game["player_1"] == data["user_id"]:
-            current_game["p1_direction"] = data["move"]
+            current_game["p1_direction"] = data["move"].decode("ascii")
         elif current_game["player_2"] == data["user_id"]:
-            current_game["p2_direction"] = data["move"]
+            current_game["p2_direction"] = data["move"].decode("ascii")
 
     def process_game(self, game_id):
 
         curr_game = self.games[game_id]
+        print(curr_game)
         s1 = curr_game["p1_snake"]
         s2 = curr_game["p2_snake"]
         d1 = curr_game["p1_direction"]
@@ -310,6 +313,7 @@ class UDPServer:
         return snake
 
     def check_collisions(self, s1, s2):
+        print(s1, s2)
         p1_collision, p2_collision = 0, 0
         if s1:
             if s1[0][0] < 0 or s1[0][0] > self.game_shape[0] or s1[0][1] < 0 or s1[0][1] > self.game_shape[1]:
