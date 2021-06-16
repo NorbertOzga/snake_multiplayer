@@ -123,17 +123,16 @@ class Body:
 
 
         elif message_type == MessageType.JOIN_GAME_CLIENT:
-            user_id, game_id = struct.unpack("!HH", body_bytes)
+            user_id, game_id = struct.unpack("!HH", body_bytes[:4])
             
             body.data["user_id"] = user_id
             body.data["game_id"] = game_id
 
         elif message_type == MessageType.JOIN_GAME_SERVER:
-            operation_success = True if body_bytes[:1] == b"\x20" else False
-            is_player_1, = struct.unpack("!?", body_bytes[1:])
+            operation_success, is_player_1 = struct.unpack("!HH", body_bytes)
 
-            body.data["operation_success"] = operation_success
-            body.data["is_player_1"] = is_player_1
+            body.data["operation_success"] = True if operation_success == 0x20 else False
+            body.data["is_player_1"] = True if is_player_1 == 1 else False
 
         elif message_type == MessageType.CREATE_GAME_CLIENT:
             user_id, game_name_len = struct.unpack("!HH", body_bytes[:4])
@@ -222,12 +221,11 @@ class Body:
             return struct.pack("!HH", self.data["user_id"], self.data["game_id"])
 
         elif message_type == MessageType.JOIN_GAME_SERVER:
-            if self.data["operation_success"]:
-                response = b"\x20"
-            else:
-                response = b"\x50"
 
-            response += struct.pack("!?", self.data["is_player_1"])
+            response = struct.pack(
+                "!HH", 
+                0x20 if self.data["operation_success"] else 0x50,
+                1 if self.data["is_player_1"] else 0)
 
             return response
 
