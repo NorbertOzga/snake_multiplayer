@@ -56,11 +56,11 @@ class Body:
             p1_snake_len, p2_snake_len = struct.unpack("!HH", body_bytes[16:20])
             if p1_snake_len > 0:
                 p1_snake = struct.unpack(
-                    f"!{p1_snake_len}H", body_bytes[20:(p1_snake_len * 2)+ 20]
+                    f"!{p1_snake_len*2}H", body_bytes[20:(p1_snake_len * 2)+ 20]
                 )
             if p2_snake_len > 0:
                 p2_snake = struct.unpack(
-                    f"!{p2_snake_len}H", 
+                    f"!{p2_snake_len*2}H", 
                     body_bytes[
                         (p1_snake_len * 2) + 20: (p2_snake_len * 2) + (p1_snake_len * 2) + 20
                     ],
