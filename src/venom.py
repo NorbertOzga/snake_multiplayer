@@ -177,7 +177,7 @@ class Message:
     @staticmethod
     def from_bytes(message_bytes: bytes):
         msg = Message(
-            header=Header(message_bytes[:2]),
+            header=Header.from_bytes(message_bytes[:2]),
             body=Body.from_bytes(message_bytes[2:])
         )
         
