@@ -55,6 +55,10 @@ class UDPServer:
         elif req["message_type"] == 9:
             resp = self.exit_game(req)
         elif req["message_type"] == 11:
+            try:
+                self.games[req["game_id"]]
+            except KeyError:
+                pass
             resp = self.store_move(req)
         else:
             resp = {
