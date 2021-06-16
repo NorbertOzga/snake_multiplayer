@@ -194,7 +194,7 @@ class Body:
 
         elif message_type == MessageType.LIST_GAMES_SERVER:
             response = struct.pack("!H", len(self.data["games"]))
-            print(self.data["games"])
+
             for game in self.data["games"]:
                 response += struct.pack(
                     "!H?b", 
