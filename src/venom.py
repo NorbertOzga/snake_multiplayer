@@ -123,7 +123,7 @@ class Body:
 
 
         elif message_type == MessageType.JOIN_GAME_CLIENT:
-            user_id, game_id = struct.unpack("!HH", body_bytes)
+            user_id, game_id = struct.unpack("!HH", body_bytes[:4])
             
             body.data["user_id"] = user_id
             body.data["game_id"] = game_id
