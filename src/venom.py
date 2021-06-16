@@ -135,6 +135,18 @@ class Body:
             body.data["operation_success"] = operation_success
             body.data["is_player_1"] = is_player_1
 
+        elif message_type == MessageType.CREATE_GAME_CLIENT:
+            user_id, game_name_len = struct.unpack("!HH", body_bytes[:4])
+            game_name = body_bytes[4:game_name_len+4].decode("ascii")
+
+            body.data["user_id"] = user_id
+            body.data["game_name"] = game_name
+
+        elif message_type == MessageType.CREATE_GAME_SERVER:
+            game_id, = struct.unpack("!H", body_bytes)
+
+            body.data["game_id"] = game_id
+
         return body
 
     def __init__(self):
@@ -216,6 +228,17 @@ class Body:
                 response = b"\x50"
 
             response += struct.pack("!?", self.data["is_player_1"])
+
+            return response
+
+        elif message_type == MessageType.CREATE_GAME_CLIENT:
+            response = struct.pack("!HH", self.data["user_id"], len(self.data["game_name"]))
+            response += self.data["game_name"].encode("ascii")
+
+            return response
+
+        elif message_type == MessageType.CREATE_GAME_SERVER:
+            response = struct.pack("!H", self.data["game_id"])
 
             return response
 
