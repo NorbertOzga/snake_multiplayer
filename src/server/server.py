@@ -343,8 +343,8 @@ class UDPServer:
 
     def check_games(self):
         now = time.time()
-        for game in self.queue:
-            client_address, recive_time, game_id = game
+        for game_num in range(len(self.queue)):
+            client_address, recive_time, game_id = self.queue[game_num]
             if now - recive_time > 0.2:
                 self.process_game(game_id)
                 resp = self.game_state(game_id)
@@ -353,6 +353,9 @@ class UDPServer:
                 self.printwt(f'[ RESPONSE to {client_address} ]')
                 self.sock.sendto(resp.encode('utf-8'), client_address)
                 print('\n', resp, '\n')
+            else:
+                self.queue = self.queue[game_num+1:]
+                break
 
 def main():
     """ Create a UDP Server and handle multiple clients simultaneously """

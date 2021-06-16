@@ -251,8 +251,10 @@ while True:
 		generateSnake(input["p2"], P2_C)
 		drawFood(input["f"][0], input["f"][1], FOOD_COLOR)
 		drawPoints(input["pt"][0], input["pt"][1])
-
-	if MYNAME == input['player_1'] and input['p1_game_over'] ==1:
-		break
-	if MYNAME == input['player_2'] and input['p1_game_over'] ==1:
-		break
+		try:
+			if MYNAME == input['player_1'] and input['p1_game_over'] ==1:
+				break
+			if MYNAME == input['player_2'] and input['p1_game_over'] ==1:
+				break
+		except:
+			print("error")
