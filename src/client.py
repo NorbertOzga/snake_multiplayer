@@ -117,6 +117,7 @@ def sendMessage(message):
 
 # Properly getting messages
 def getMessage(returnNone=False):
+	unpacked=None
 	try:
 		data,address=sock.recvfrom(1024)
 		unpacked=Message.from_bytes(data)
@@ -129,7 +130,9 @@ def getMessage(returnNone=False):
 
 # Checks if message is 200 OK
 def messageOK(message):
-	return message.body.data["operation_success"]==b"\x20"
+	#print(message.body.data)
+	#return message.body.data["operation_success"]
+	return True
 
 # Checks if message has expected type
 def messageType(message,message_type):
@@ -148,8 +151,8 @@ while True:
 	inp=getMessage()
 	if messageType(inp,MessageType.LOGIN_SERVER):
 		if messageOK(inp):
-			print("Twoje ID:",inp["user_id"])
-			USER_ID=inp["user_id"]
+			print("Twoje ID:",inp.body.data["user_id"])
+			USER_ID=inp.body.data["user_id"]
 			break
 		else:
 			print("Wybrany nick jest już zajęty! Wybierz inny.")
@@ -163,11 +166,12 @@ while True:
 	inp=getMessage()
 	if messageType(inp,MessageType.LIST_GAMES_SERVER):
 		if messageOK(inp):
+			print(inp.body.data)
 			for game in inp.body.data["games"]:
+				game=list(game.values())
 				print(game[0],"\t",\
 						game[1],"\t",\
-						game[2],"\t",\
-						game[3])
+						game[2])
 		else:
 			print("Nie udało się uzyskać listy gier. Koniec programu.")
 			exit(2)

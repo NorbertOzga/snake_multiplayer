@@ -50,7 +50,7 @@ class UDPServer:
         elif req.header.message_type == MessageType.CREATE_GAME_CLIENT:
             resp = self.create_game(req.body.data)
         elif req.header.message_type == MessageType.JOIN_GAME_CLIENT:
-            resp = self.join_game(req, client_address)
+            resp = self.join_game(req.body.data, client_address)
         elif req.header.message_type == MessageType.EXIT_GAME_CLIENT:
             resp = self.exit_game(req.body.data)
         elif req.header.message_type == MessageType.SEND_MOVE:
@@ -131,11 +131,11 @@ class UDPServer:
         if self.games[game_id]["players_num"] < 2:
             if self.games[game_id]["player_1"] == -1:
                 self.games[game_id]["player_1"] = data["user_id"]
-                self.games[game_id]["p1"].append([5, 5])
+                self.games[game_id]["p1_snake"].append([5, 5])
                 is_player_1 = True
             else:
                 self.games[game_id]["player_2"] = data["user_id"]
-                self.games[game_id]["p2"].append([15, 15])
+                self.games[game_id]["p2_snake"].append([15, 15])
                 is_player_1 = False
 
             self.games[game_id]["players_num"] += 1
