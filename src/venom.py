@@ -85,9 +85,13 @@ class Body:
 
         elif message_type == MessageType.LOGIN_SERVER:
             operation_success = True if body_bytes[:1] == b"\x20" else False
+            body.data["operation_success"] = operation_success
+            
+            if not operation_success:
+                pass
+
             user_id, = struct.unpack("!H", body_bytes[1:3])
             
-            body.data["operation_success"] = operation_success
             body.data["user_id"] = user_id
 
         elif message_type == MessageType.LIST_GAMES_CLIENT:
