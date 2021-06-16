@@ -243,7 +243,7 @@ while True:
 		input = lastData
 
 	print(input)
-	if  now - last_update > 0.3:
+	if  now - last_update > 0.1:
 		if input != None:
 			if lastData != None:
 				generateSnake(lastData["p1"], WHITE)
