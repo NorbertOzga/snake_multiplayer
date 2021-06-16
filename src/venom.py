@@ -50,17 +50,17 @@ class Body:
 
         elif message_type == MessageType.SEND_STATE:
             game_id, p1_direction, p2_direction, food_x, \
-            food_y, pt1, pt2, p1_over, p2_over = struct.unpack(
-                "!Hcc4H??", body_bytes[:14]
+            food_y, pt1, pt2, players_num, p1_over, p2_over = struct.unpack(
+                "!Hcc5H??", body_bytes[:16]
             )
-            p1_snake_len, p2_snake_len = struct.unpack("!HH", body_bytes[14:18])
+            p1_snake_len, p2_snake_len = struct.unpack("!HH", body_bytes[16:20])
             p1_snake = struct.unpack(
-                f"!{p1_snake_len}H", body_bytes[18:(p1_snake_len * 2)+ 18]
+                f"!{p1_snake_len}H", body_bytes[20:(p1_snake_len * 2)+ 20]
             )
             p2_snake = struct.unpack(
                 f"!{p2_snake_len}H", 
                 body_bytes[
-                    (p1_snake_len * 2) + 18: (p2_snake_len * 2) + (p1_snake_len * 2) + 18
+                    (p1_snake_len * 2) + 20: (p2_snake_len * 2) + (p1_snake_len * 2) + 20
                 ],
             )
 
@@ -70,6 +70,7 @@ class Body:
             body.data["food"] = (food_x, food_y)
             body.data["pt1"] = pt1
             body.data["pt2"] = pt2
+            body.data["players_num"] = players_num
             body.data["p1_over"] = p1_over
             body.data["p2_over"] = p2_over
             body.data["p1_snake"] = p1_snake
@@ -92,7 +93,7 @@ class Body:
         elif message_type == MessageType.LIST_GAMES_CLIENT:
             pass
 
-        elif messageType == MessageType.LIST_GAMES_SERVER:
+        elif message_type == MessageType.LIST_GAMES_SERVER:
             pass
 
         elif message_type == MessageType.JOIN_GAME_CLIENT:
@@ -124,7 +125,7 @@ class Body:
             response = b""
 
             response += struct.pack(
-                "!Hcc4H??", 
+                "!Hcc5H??", 
                 self.data["game_id"],
                 self.data["p1_direction"], 
                 self.data["p2_direction"],
@@ -132,6 +133,7 @@ class Body:
                 self.data["food"][1],
                 self.data["pt1"],
                 self.data["pt2"],
+                self.data["players_num"],
                 self.data["p1_over"],
                 self.data["p2_over"],
             )
@@ -160,7 +162,7 @@ class Body:
         elif message_type == MessageType.LIST_GAMES_CLIENT:
             pass
 
-        elif messageType == MessageType.LIST_GAMES_SERVER:
+        elif message_type == MessageType.LIST_GAMES_SERVER:
             pass
 
         elif message_type == MessageType.JOIN_GAME_CLIENT:
