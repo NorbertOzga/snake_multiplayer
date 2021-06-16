@@ -59,7 +59,7 @@ class UDPServer:
                 self.games[req["game_id"]]
                 resp = self.store_move(req)
             except KeyError:
-                pass
+                return
 
         else:
             resp = {
