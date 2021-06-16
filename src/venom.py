@@ -176,10 +176,11 @@ class Body:
 class Message:
     @staticmethod
     def from_bytes(message_bytes: bytes):
-        msg = Message(
-            header=Header.from_bytes(message_bytes[:2]),
-            body=Body.from_bytes(message_bytes[2:])
-        )
+        header = Header.from_bytes(message_bytes[:2])
+        body = Body.from_bytes(message_bytes[2:], message_type=header.message_type)
+        msg = Message(header, body)
+
+        return msg
         
     def __init__(self, header=None, body=None):
         self.header = header
