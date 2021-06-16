@@ -10,43 +10,12 @@ import time
 import errno
 from venom import *
 
-# Initialization
-pygame.init()
 
-# Frames Per Second configuration
-FPS=30
-FramePerSec=pygame.time.Clock()
 
-# Game size (defines window size)
-SIZE_X=25
-SIZE_Y=25
-POINT_SIZE=24
-
-# Colors
-BLACK=(0,0,0)
-WHITE=(255,255,255)
-P1_C=(127,255,127)
-P2_C=(127,127,255)
-FOOD_COLOR=(255,127,0)
-
-# Template server and its address configuration
+# Server and its address configuration
 SERVER_ADDRESS=	"20.86.147.135"
 SERVER_PORT=	10000
 MYNAME = ""
-# Creating window
-DISPLAY=pygame.display.set_mode((SIZE_X*POINT_SIZE,SIZE_Y*POINT_SIZE+16))
-DISPLAY.fill(WHITE)
-pygame.display.set_caption("Snake Client")
-
-# Fonts configuration
-font=pygame.font.SysFont("Courier",12)
-
-# Adding HUD
-pygame.draw.rect(DISPLAY,(0,0,0),(0,SIZE_Y*POINT_SIZE,SIZE_X*POINT_SIZE,SIZE_Y*POINT_SIZE+16))
-PLAYER1=font.render("Player 1: ", True, P1_C)
-DISPLAY.blit(PLAYER1,(2,SIZE_Y*POINT_SIZE+2))
-PLAYER2=font.render("Player 2: ", True, P2_C)
-DISPLAY.blit(PLAYER2,(2+(SIZE_X*POINT_SIZE)/2,SIZE_Y*POINT_SIZE+2))
 
 # Points
 def drawPoints(player1_points, player2_points):
@@ -73,7 +42,7 @@ sock.settimeout(0.1)
 SERVER=(SERVER_ADDRESS,SERVER_PORT)
 
 # Draw initial points
-drawPoints(0,0)
+# drawPoints(0,0)
 
 # Drawing food
 def drawFood(x,y,color):
@@ -210,6 +179,40 @@ while True:
 			exit(1)
 	elif(ch=="Q"):
 		exit(0)
+
+# Initialization
+pygame.init()
+
+# Frames Per Second configuration
+FPS=30
+FramePerSec=pygame.time.Clock()
+
+# Game size (defines window size)
+SIZE_X=25
+SIZE_Y=25
+POINT_SIZE=24
+
+# Colors
+BLACK=(0,0,0)
+WHITE=(255,255,255)
+P1_C=(127,255,127)
+P2_C=(127,127,255)
+FOOD_COLOR=(255,127,0)
+
+# Creating window
+DISPLAY=pygame.display.set_mode((SIZE_X*POINT_SIZE,SIZE_Y*POINT_SIZE+16))
+DISPLAY.fill(WHITE)
+pygame.display.set_caption("Snake Client")
+
+# Fonts configuration
+font=pygame.font.SysFont("Courier",12)
+
+# Adding HUD
+pygame.draw.rect(DISPLAY,(0,0,0),(0,SIZE_Y*POINT_SIZE,SIZE_X*POINT_SIZE,SIZE_Y*POINT_SIZE+16))
+PLAYER1=font.render("Player 1: ", True, P1_C)
+DISPLAY.blit(PLAYER1,(2,SIZE_Y*POINT_SIZE+2))
+PLAYER2=font.render("Player 2: ", True, P2_C)
+DISPLAY.blit(PLAYER2,(2+(SIZE_X*POINT_SIZE)/2,SIZE_Y*POINT_SIZE+2))
 
 # Main game loop
 last_key = "r"
