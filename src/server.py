@@ -67,7 +67,7 @@ class UDPServer:
         self.sock.sendto(resp, client_address)
 
     def wait_for_client(self):
-        print(time.time())
+        print("wait_for_client",time.time())
         """ Wait for a client """
         try:
             # receive message from a client
@@ -347,11 +347,10 @@ class UDPServer:
 
     def check_games(self):
         now = time.time()
-        print(now)
+        print("check_games", now)
         for game_id in self.queue.keys():
             recive_time, hosts = self.queue[game_id]
             if now - recive_time > 0.05:
-                print("if")
                 self.process_game(game_id)
                 resp = self.game_state(game_id)
 
