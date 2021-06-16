@@ -31,6 +31,7 @@ class UDPServer:
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.printwt(f'Binding server to {self.host}:{self.port}...')
         self.sock.bind((self.host, self.port))
+        self.sock.settimeout(0.05)
         self.printwt(f'Server binded to {self.host}:{self.port}')
 
     def handle_request(self, data, client_address):
@@ -76,8 +77,10 @@ class UDPServer:
             # handle client's request
 
             self.handle_request(data, client_address)
-        except OSError as err:
-            self.printwt(err)
+        #except OSError as err:
+        #    self.printwt(err)
+        except socket.timeout as e:
+            print("no data")
 
     def shutdown_server(self):
         """ Shutdown the server """
@@ -347,7 +350,6 @@ def main():
     while True:
         udp_server_multi_client.wait_for_client()
         print("wait")
-
 
 if __name__ == '__main__':
     main()
