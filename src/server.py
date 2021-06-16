@@ -106,6 +106,7 @@ class UDPServer:
 
     def list_games(self, data):
         if data["user_id"] not in self.users.keys():
+            print("AAAAAAAAAAAAAAA")
             body = Body()
             header = Header(sender=0, message_type=MessageType.LIST_GAMES_SERVER)
             body.data["operation_success"] = b'\x50'
