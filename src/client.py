@@ -101,13 +101,13 @@ def composeMessage(message_type=None, nickname=None, user_id=None, \
 	if nickname:
 		body.data["nickname"]=nickname
 	if user_id:
-		temp["user_id"]=user_id
+		body.data["user_id"]=user_id
 	if game_name:
-		temp["game_name"]=game_name
+		body.data["game_name"]=game_name
 	if game_id:
-		temp["game_id"]=game_id
+		body.data["game_id"]=game_id
 	if d:
-		temp["d"]= d
+		body.data["move"]= d
 	message=Message(header=header,body=body)
 	return message.to_bytes()
 
@@ -116,24 +116,24 @@ def sendMessage(message):
 	sock.sendto(message,SERVER)
 
 # Properly getting messages
-def getMessage():
+def getMessage(returnNone=False):
 	try:
 		data,address=sock.recvfrom(1024)
-		data=data.decode("UTF-8").replace("\'","\"")
+		unpacked=Message.from_bytes(data)
 	except socket.timeout as e:
-		pass
-	return json.loads(data)
+		if returnNone:
+			return None
+		else:
+			pass
+	return unpacked
 
 # Checks if message is 200 OK
 def messageOK(message):
-	try:
-		return message["response"]==200
-	except:
-		return message["success"]==200
+	return message.body.data["operation_success"]==b"\x20"
 
 # Checks if message has expected type
 def messageType(message,message_type):
-	return message["message_type"]==message_type
+	return message.header.message_type==message_type
 
 USER_ID=0
 GAME_ID=0
@@ -146,7 +146,7 @@ while True:
 	MYNAME = nick
 	sendMessage(composeMessage(MessageType.LOGIN_CLIENT,nick))
 	inp=getMessage()
-	if messageType(inp,2):
+	if messageType(inp,MessageType.LOGIN_SERVER):
 		if messageOK(inp):
 			print("Twoje ID:",inp["user_id"])
 			USER_ID=inp["user_id"]
@@ -159,11 +159,11 @@ while True:
 
 # Gets current game list
 while True:
-	sendMessage(composeMessage(3,user_id=USER_ID))
+	sendMessage(composeMessage(MessageType.LIST_GAMES_CLIENT,user_id=USER_ID))
 	inp=getMessage()
-	if messageType(inp,4):
+	if messageType(inp,MessageType.LIST_GAMES_SERVER):
 		if messageOK(inp):
-			for game in inp["list_of_games"]:
+			for game in inp.body.data["games"]:
 				print(game[0],"\t",\
 						game[1],"\t",\
 						game[2],"\t",\
@@ -179,9 +179,9 @@ while True:
 	ch=ch.upper()
 	if(ch=="N"):
 		name=input("Nazwa gry: ")
-		sendMessage(composeMessage(5,user_id=USER_ID,game_name=name))
+		sendMessage(composeMessage(MessageType.CREATE_GAME_CLIENT,user_id=USER_ID,game_name=name))
 		inp2=getMessage()
-		if messageType(inp2,6):
+		if messageType(inp2,MessageType.CREATE_GAME_SERVER):
 			if messageOK(inp2):
 				pass
 			else:
@@ -191,12 +191,13 @@ while True:
 			exit(1)
 	elif(ch=="D"):
 		game_id=int(input("ID gry: "))
-		sendMessage(composeMessage(7,user_id=USER_ID,game_id=game_id))
+		sendMessage(composeMessage(MessageType.JOIN_GAME_CLIENT,user_id=USER_ID,game_id=game_id))
 		inp2=getMessage()
-		if messageType(inp2,8):
+		if messageType(inp2,MessageType.JOIN_GAME_SERVER):
 			if messageOK(inp2):
 				print("Dołączono do gry #",game_id)
 				GAME_ID=game_id
+				is_player_1=inp2.body.data["is_player_1"]
 				break
 			else:
 				print("Nie udało się dołączyć do rozgrywki.")
@@ -222,7 +223,9 @@ def check_last_pressed_key(last_key):
 			elif event.key == pygame.K_DOWN:
 				return "d"
 	return last_key
+
 last_last_key = ""
+
 while True:
 	now = time.time()
 	last_key = check_last_pressed_key(last_key)
@@ -232,7 +235,7 @@ while True:
 			sock.close()
 			sys.exit()
 	if last_key != last_last_key:
-		out = composeMessage(11, user_id=USER_ID, game_id=GAME_ID, d=last_key)
+		out = composeMessage(MessageType.SEND_MOVE, user_id=USER_ID, game_id=GAME_ID, d=last_key)
 		#print("out", out)
 		sendMessage(out)
 		last_last_key = last_key
@@ -240,13 +243,11 @@ while True:
 	FramePerSec.tick(FPS)
 	#print("GAME")
 	last_key = check_last_pressed_key(last_key)
-	try:
-		data, address = sock.recvfrom(1024)
-	except socket.timeout as e:
-		input = None
+	inp=getMessage(True)
 	try:
 		#print(data.decode('utf-8'))
-		input = eval(data.decode('utf-8'))["game_state"]
+		#input = eval(data.decode('utf-8'))["game_state"]
+		input = inp.body.data
 	except:
 		input = lastData
 	last_key = check_last_pressed_key(last_key)
@@ -254,20 +255,20 @@ while True:
 	if True:
 		if input != None:
 			if lastData != None:
-				generateSnake(lastData["p1"], WHITE)
-				generateSnake(lastData["p2"], WHITE)
-				drawFood(lastData["f"][0], lastData["f"][1], WHITE)
+				generateSnake(lastData["p1_snake"], WHITE)
+				generateSnake(lastData["p2_snake"], WHITE)
+				drawFood(lastData["food"][0], lastData["food"][1], WHITE)
 				lastData = input
 			else:
 				lastData = input
-			generateSnake(input["p1"], P1_C)
-			generateSnake(input["p2"], P2_C)
-			drawFood(input["f"][0], input["f"][1], FOOD_COLOR)
-			drawPoints(input["pt"][0], input["pt"][1])
+			generateSnake(input["p1_snake"], P1_C)
+			generateSnake(input["p2_snake"], P2_C)
+			drawFood(input["food"][0], input["food"][1], FOOD_COLOR)
+			drawPoints(input["pt1"], input["pt2"])
 			try:
-				if MYNAME == input['player_1'] and input['p1_game_over'] ==1:
+				if is_player_1 and input['p1_over'] ==1:
 					break
-				if MYNAME == input['player_2'] and input['p1_game_over'] ==1:
+				if not is_player_1 and input['p2_over'] ==1:
 					break
 			except:
 				print("error")
