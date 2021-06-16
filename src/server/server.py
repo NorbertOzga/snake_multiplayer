@@ -355,7 +355,7 @@ class UDPServer:
         now = time.time()
         for game_id in self.queue.keys():
             recive_time, hosts = self.queue[game_id]
-            if now - recive_time > 1:
+            if now - recive_time > 0.5:
                 print("-----------IF--------------------")
                 self.process_game(game_id)
                 resp = self.game_state(game_id)
@@ -370,7 +370,7 @@ class UDPServer:
                     continue
             else:
                 print("---------------ELSE---------------")
-        '''
+
         to_remove = []
         for game_id in self.queue.keys():
             if self.check_gameover(game_id):
@@ -379,7 +379,7 @@ class UDPServer:
         for game_id in to_remove:
             del self.games[game_id]
             del self.queue[game_id]
-        '''
+
 
 def main():
     """ Create a UDP Server and handle multiple clients simultaneously """
