@@ -8,6 +8,8 @@ import socket
 import json
 import time
 import errno
+from ..venom import *
+
 # Initialization
 pygame.init()
 
@@ -91,12 +93,13 @@ lastData=None
 # Message composer
 def composeMessage(message_type=None, nickname=None, user_id=None, \
 					game_name=None, game_id=None, d=None):
+	header=Header(sender=1,message_type=message_type)
+	body=Body()
+		
 	temp={}
 	temp["sender"]=1
-	if message_type:		
-		temp["message_type"]=message_type
 	if nickname:
-		temp["nickname"]=nickname
+		body.data["nickname"]=nickname
 	if user_id:
 		temp["user_id"]=user_id
 	if game_name:
@@ -105,11 +108,12 @@ def composeMessage(message_type=None, nickname=None, user_id=None, \
 		temp["game_id"]=game_id
 	if d:
 		temp["d"]= d
-	return json.dumps(temp)
+	message=Message(header=header,body=body)
+	return message.to_bytes()
 
 # Sending messages
 def sendMessage(message):
-	sock.sendto(message.encode(),SERVER)
+	sock.sendto(message,SERVER)
 
 # Properly getting messages
 def getMessage():
