@@ -19,7 +19,7 @@ class UDPServer:
         ''' Print message with current date and time '''
 
         current_date_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        #print(f'[{current_date_time}] {msg}')
+        print(f'[{current_date_time}] {msg}')
 
     def configure_server(self):
         ''' Configure the server '''
@@ -41,7 +41,7 @@ class UDPServer:
 
         req = data.decode('utf-8')
         self.printwt(f'[ REQUEST from {client_address} ]')
-        #print('\n', req, '\n')
+        print('\n', req, '\n')
 
         req = eval(req)
         if req["message_type"] == 1:
@@ -364,12 +364,15 @@ class UDPServer:
                 resp = self.game_state(game_id)
 
                 resp = str(resp)
+                self.printwt(f'[ RESPONSE {resp} ]')
                 for host in hosts:
                     self.sock.sendto(resp.encode('utf-8'), host)
                 try:
                     self.queue[game_id][0] = time.time()
                 except KeyError:
                     continue
+            else:
+                print("---------------ELSE---------------")
 
         to_remove = []
         for game_id in self.queue.keys():
