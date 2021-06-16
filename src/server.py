@@ -263,6 +263,7 @@ class UDPServer:
     def process_game(self, game_id):
 
         curr_game = self.games[game_id]
+        print(curr_game)
         s1 = curr_game["p1_snake"]
         s2 = curr_game["p2_snake"]
         d1 = curr_game["p1_direction"]
