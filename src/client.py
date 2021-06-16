@@ -10,8 +10,6 @@ import time
 import errno
 from venom import *
 
-
-
 # Server and its address configuration
 SERVER_ADDRESS=	"20.86.147.135"
 SERVER_PORT=	10000
@@ -120,7 +118,7 @@ while True:
 	inp=getMessage()
 	if messageType(inp,MessageType.LOGIN_SERVER):
 		if messageOK(inp):
-			print("Twoje ID:",inp.body.data["user_id"])
+			print("Twoje ID:",inp.body.data["user_id"],"\n")
 			USER_ID=inp.body.data["user_id"]
 			break
 		else:
@@ -135,11 +133,12 @@ while True:
 	inp=getMessage()
 	if messageType(inp,MessageType.LIST_GAMES_SERVER):
 		if messageOK(inp):
-			print(inp.body.data)
+			print("ID gry\t\tWolna?\t\tNazwa gry")
+			print("----------------------------------------")
 			for game in inp.body.data["games"]:
 				game=list(game.values())
-				print(game[0],"\t",\
-						game[1],"\t",\
+				print(game[0],"\t\t",\
+						"Tak" if game[1] else "Nie","\t\t",\
 						game[2])
 		else:
 			print("Nie udało się uzyskać listy gier. Koniec programu.")
@@ -147,7 +146,7 @@ while True:
 	else:
 		print("Uzyskano inny typ odpowiedzi niż oczekiwano. Koniec programu.")
 		exit(1)
-	print("\n")
+	print("----------------------------------------")
 	ch=input("N - nowa gra\tD - dołącz\tQ - wyjdź\t? ")
 	ch=ch.upper()
 	if(ch=="N"):
