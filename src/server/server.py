@@ -8,7 +8,7 @@ class UDPServer:
     games = {}  # list of current games
     users = {}  # "IP": "user ID"
     game_shape = (25, 25)
-    queue = []
+    queue = {}
 
     def __init__(self, host, port):
         self.host = host
@@ -56,7 +56,6 @@ class UDPServer:
             resp = self.exit_game(req)
         elif req["message_type"] == 11:
             resp = self.store_move(req)
-            self.queue.append([client_address, time.time(), req["game_id"]])
         else:
             resp = {
                 "sender": 0,
@@ -358,6 +357,8 @@ class UDPServer:
                 for host in hosts:
                     self.sock.sendto(resp.encode('utf-8'), host)
                 self.queue[game_id][0] = time.time()
+
+
 def main():
     """ Create a UDP Server and handle multiple clients simultaneously """
 
@@ -366,6 +367,7 @@ def main():
     while True:
         udp_server_multi_client.wait_for_client()
         udp_server_multi_client.check_games()
+
 
 if __name__ == '__main__':
     main()
