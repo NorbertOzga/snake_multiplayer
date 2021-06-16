@@ -224,7 +224,7 @@ class Body:
 
             response = struct.pack(
                 "!HH", 
-                b"\x20" if self.data["operation_success"] else b"\x50",
+                0x20 if self.data["operation_success"] else 0x50,
                 1 if self.data["is_player_1"] else 0)
 
             return response
