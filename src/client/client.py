@@ -228,23 +228,23 @@ while True:
 			sock.close()
 			sys.exit()
 	out = composeMessage(11, user_id=USER_ID, game_id=GAME_ID, d=last_key)
-	print("out", out)
+	#print("out", out)
 	sendMessage(out)
 	pygame.display.update()
 	FramePerSec.tick(FPS)
-	print("GAME")
+	#print("GAME")
 	last_key = check_last_pressed_key(last_key)
 	try:
 		data, address = sock.recvfrom(1024)
 	except socket.timeout as e:
 		input = None
 	try:
-		print(data.decode('utf-8'))
+		#print(data.decode('utf-8'))
 		input = eval(data.decode('utf-8'))["game_state"]
 	except:
 		input = lastData
 	last_key = check_last_pressed_key(last_key)
-	print(input)
+	#print(input)
 	if True:
 		if input != None:
 			if lastData != None:

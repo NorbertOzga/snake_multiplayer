@@ -355,7 +355,7 @@ class UDPServer:
         now = time.time()
         for game_id in self.queue.keys():
             recive_time, hosts = self.queue[game_id]
-            if now - recive_time > 0.5:
+            if now - recive_time > 0.2:
                 print("-----------IF--------------------")
                 self.process_game(game_id)
                 resp = self.game_state(game_id)
