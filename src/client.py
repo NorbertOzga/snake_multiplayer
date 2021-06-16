@@ -259,20 +259,12 @@ while True:
 	if True:
 		if input != None:
 			if lastData != None:
-				print("---lastData---")
-				print(lastData["p1_snake"])
-				print(lastData["p2_snake"])
-				print("--------------")
 				generateSnake(lastData["p1_snake"], WHITE)
 				generateSnake(lastData["p2_snake"], WHITE)
 				drawFood(lastData["food"][0], lastData["food"][1], WHITE)
 				lastData = input
 			else:
 				lastData = input
-			print("---input---")
-			print(input["p1_snake"])
-			print(input["p2_snake"])
-			print("-----------")
 			generateSnake(input["p1_snake"], P1_C)
 			generateSnake(input["p2_snake"], P2_C)
 			drawFood(input["food"][0], input["food"][1], FOOD_COLOR)
