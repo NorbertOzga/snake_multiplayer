@@ -192,8 +192,10 @@ class UDPServer:
     def check_gameover(self, game_id):
         if self.games[game_id]["players_num"] == 2 and self.games[game_id]["p1_game_over"] and self.games[game_id]["p2_game_over"]:
             del self.games[game_id]
+            del self.queue[game_id]
         elif self.games[game_id]["players_num"] == 1 and (self.games[game_id]["p1_game_over"] or self.games[game_id]["p2_game_over"]):
             del self.games[game_id]
+            del self.queue[game_id]
 
     def create_game(self, req):
         game_id = self.get_new_game_id()
@@ -299,7 +301,6 @@ class UDPServer:
 
     @staticmethod
     def move(point, direction):
-        print(point, direction)
         if direction == "r":
             return point[0]+1, point[1]
         elif direction == "l":
@@ -310,9 +311,7 @@ class UDPServer:
             return point[0], point[1]-1
 
     def move_snake(self, snake, direction, eat_food):
-        print("snake", snake)
         new_head = self.move(snake[0], direction)
-        print("new_head", new_head)
         snake.insert(0, new_head)
 
         if not eat_food:
