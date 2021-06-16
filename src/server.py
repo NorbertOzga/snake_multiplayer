@@ -381,9 +381,9 @@ def main():
 
     udp_server_multi_client = UDPServer('0.0.0.0', 10000)
     udp_server_multi_client.configure_server()
-    udp_server_multi_client.run()
     while True:
         udp_server_multi_client.wait_for_client()
+        udp_server_multi_client.run()
         #udp_server_multi_client.check_games()
 
 
