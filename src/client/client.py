@@ -218,7 +218,7 @@ def check_last_pressed_key(last_key):
 			elif event.key == pygame.K_DOWN:
 				return "d"
 	return last_key
-
+last_last_key = ""
 while True:
 	now = time.time()
 	last_key = check_last_pressed_key(last_key)
@@ -227,9 +227,11 @@ while True:
 			pygame.quit()
 			sock.close()
 			sys.exit()
-	out = composeMessage(11, user_id=USER_ID, game_id=GAME_ID, d=last_key)
-	#print("out", out)
-	sendMessage(out)
+	if last_key != last_last_key:
+		out = composeMessage(11, user_id=USER_ID, game_id=GAME_ID, d=last_key)
+		#print("out", out)
+		sendMessage(out)
+		last_last_key = last_key
 	pygame.display.update()
 	FramePerSec.tick(FPS)
 	#print("GAME")
