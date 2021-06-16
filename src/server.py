@@ -67,7 +67,7 @@ class UDPServer:
         self.sock.sendto(resp, client_address)
 
     def wait_for_client(self):
-        print("wait_for_client",time.time())
+        print(time.time(), "wait_for_client")
         """ Wait for a client """
         try:
             # receive message from a client
@@ -314,7 +314,6 @@ class UDPServer:
         return snake
 
     def check_collisions(self, s1, s2):
-        print(s1, s2)
         p1_collision, p2_collision = 0, 0
         if s1:
             if s1[0][0] < 0 or s1[0][0] > self.game_shape[0] or s1[0][1] < 0 or s1[0][1] > self.game_shape[1]:
@@ -347,7 +346,7 @@ class UDPServer:
 
     def check_games(self):
         now = time.time()
-        print("check_games", now)
+        print(now, "check_games")
         for game_id in self.queue.keys():
             recive_time, hosts = self.queue[game_id]
             if now - recive_time > 0.05:
