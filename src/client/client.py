@@ -67,7 +67,7 @@ def drawPoints(player1_points, player2_points):
 
 # Connecting
 sock=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.settimeout(0.2)
+sock.settimeout(0.1)
 SERVER=(SERVER_ADDRESS,SERVER_PORT)
 
 # Draw initial points
@@ -205,33 +205,35 @@ while True:
 # Old main game loop
 last_key = "r"
 last_update = time.time()
+
+def check_last_pressed_key(last_key):
+	for event in pygame.event.get():
+		if event.type == pygame.KEYDOWN:
+			if event.key == pygame.K_LEFT:
+				return "l"
+			elif event.key == pygame.K_RIGHT:
+				return "r"
+			elif event.key == pygame.K_UP:
+				return "u"
+			elif event.key == pygame.K_DOWN:
+				return "d"
+	return last_key
+
 while True:
 	now = time.time()
-	pressed_keys=pygame.key.get_pressed()
-	if pressed_keys[K_UP]:
-		out=composeMessage(11,user_id=USER_ID,game_id=GAME_ID,d="u")
-		last_key = "u"
-	elif pressed_keys[K_DOWN]:
-		out=composeMessage(11,user_id=USER_ID,game_id=GAME_ID,d="d")
-		last_key = "d"
-	elif pressed_keys[K_LEFT]:
-		out=composeMessage(11,user_id=USER_ID,game_id=GAME_ID,d="l")
-		last_key = "l"
-	elif pressed_keys[K_RIGHT]:
-		out=composeMessage(11,user_id=USER_ID,game_id=GAME_ID,d="r")
-		last_key = "r"
-	else:
-		out = composeMessage(11, user_id=USER_ID, game_id=GAME_ID, d=last_key)
+	last_key = check_last_pressed_key(last_key)
 	for event in pygame.event.get():
 		if event.type==QUIT:
 			pygame.quit()
 			sock.close()
 			sys.exit()
+	out = composeMessage(11, user_id=USER_ID, game_id=GAME_ID, d=last_key)
 	print("out", out)
 	sendMessage(out)
 	pygame.display.update()
 	FramePerSec.tick(FPS)
 	print("GAME")
+	last_key = check_last_pressed_key(last_key)
 	try:
 		data, address = sock.recvfrom(1024)
 	except socket.timeout as e:
@@ -241,9 +243,9 @@ while True:
 		input = eval(data.decode('utf-8'))["game_state"]
 	except:
 		input = lastData
-
+	last_key = check_last_pressed_key(last_key)
 	print(input)
-	if  now - last_update > 0.1:
+	if now - last_update > 0.1 or True:
 		if input != None:
 			if lastData != None:
 				generateSnake(lastData["p1"], WHITE)
