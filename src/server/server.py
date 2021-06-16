@@ -2,7 +2,9 @@ import socket
 from datetime import datetime
 import random
 import time
-from ..venom import *
+from ..venom.venom import *
+
+
 class UDPServer:
     games = {}  # list of current games
     users = {}  # "IP": "user ID"
@@ -61,11 +63,9 @@ class UDPServer:
                 "sender": 0,
                 "message_type": 12}
         # send response to the client
-        resp = str(resp)
-        self.printwt(f'[ RESPONSE to {client_address} ]')
-        self.sock.sendto(resp.encode('utf-8'), client_address)
 
-        print('\n', resp, '\n')
+        self.printwt(f'[ RESPONSE to {client_address} ]')
+        self.sock.sendto(resp, client_address)
 
     def wait_for_client(self):
         """ Wait for a client """
@@ -99,10 +99,11 @@ class UDPServer:
                 message = Message(header=header, body=body)
                 return message.to_bytes()
 
+        body = Body()
+        header = Header(sender=0, message_type=MessageType.LOGIN_SERVER)
         body.data["operation_success"] = b'\x50'
-        body.data["user_id"] = user_id
         message = Message(header=header, body=body)
-        return
+        return message.to_bytes()
 
     def list_games(self, req):
         if req["user_id"] not in self.users.keys():
@@ -143,17 +144,17 @@ class UDPServer:
             except KeyError:
                 self.queue[game_id] = [time.time(), [client_address]]
 
-            return {
-                "sender": 0,
-                "message_type": 8,
-                "response": 200,
-            }
+            header = Header(sender=0, message_type=MessageType.JOIN_GAME_SERVER)
+            body = Body()
+            body.data["operation_success"] = b'\x20'
+            message = Message(header=header, body=body)
+            return message.to_bytes()
         else:
-            return {
-                "sender": 0,
-                "message_type": 8,
-                "response": 500,
-            }
+            header = Header(sender=0, message_type=MessageType.JOIN_GAME_SERVER)
+            body = Body()
+            body.data["operation_success"] = b'\x50'
+            message = Message(header=header, body=body)
+            return message.to_bytes()
 
     def exit_game(self, req):
         game_id = req["game_id"]
@@ -210,18 +211,19 @@ class UDPServer:
                 "p1_game_over": 0,
                 "p2_game_over": 0
             }
-            return {
-                "sender": 0,
-                "message_type": 6,
-                "response": 200,
-                "game_id": game_id
-            }
+            header = Header(sender=0, message_type=MessageType.CREATE_GAME_SERVER)
+            body = Body()
+            body.data["operation_success"] = b'\x20'
+            body.data["game_id"] = game_id
+            message = Message(header=header, body=body)
+            return message.to_bytes()
+
         else:
-            return {
-                "sender": 0,
-                "message_type": 6,
-                "response": 500
-            }
+            header = Header(sender=0, message_type=MessageType.CREATE_GAME_SERVER)
+            body = Body()
+            body.data["operation_success"] = b'\x50'
+            message = Message(header=header, body=body)
+            return message.to_bytes()
 
     def get_new_game_id(self):
         games_ids = self.games.keys()
@@ -350,8 +352,6 @@ class UDPServer:
                 self.process_game(game_id)
                 resp = self.game_state(game_id)
 
-                resp = str(resp)
-                print(resp)
                 for host in hosts:
                     self.sock.sendto(resp.encode('utf-8'), host)
                 try:
