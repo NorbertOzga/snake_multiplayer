@@ -180,8 +180,8 @@ class UDPServer:
             body = Body()
             body.data["operation_success"] = b'\x20'
             body.data["game_id"] = game_id
-            body.data["p1_direction"] = self.games[game_id]["p1_direction"]
-            body.data["p2_direction"] = self.games[game_id]["p2_direction"]
+            body.data["p1_direction"] = self.games[game_id]["p1_direction"].encode("ascii")
+            body.data["p2_direction"] = self.games[game_id]["p2_direction"].encode("ascii")
             body.data["food"] = self.games[game_id]["food"]
             body.data["pt1"] = self.games[game_id]["pt1"]
             body.data["pt2"] = self.games[game_id]["pt2"]
