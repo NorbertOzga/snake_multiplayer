@@ -67,6 +67,7 @@ def drawPoints(player1_points, player2_points):
 
 # Connecting
 sock=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.settimeout(0.05)
 SERVER=(SERVER_ADDRESS,SERVER_PORT)
 
 # Draw initial points
@@ -227,10 +228,10 @@ while True:
 	pygame.display.update()
 	FramePerSec.tick(FPS)
 	print("GAME")
-	time.sleep(1)
-
-	data, address = sock.recvfrom(1024)
-
+	try:
+		data, address = sock.recvfrom(1024)
+	except socket.timeout as e:
+		input = None
 	try:
 		print(data.decode('utf-8'))
 		input = eval(data.decode('utf-8'))["game_state"]

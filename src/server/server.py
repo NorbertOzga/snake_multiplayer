@@ -169,12 +169,12 @@ class UDPServer:
             "response": 200,
         }
 
-    def game_state(self, req):
-        if req["game_id"] in self.games.keys():
+    def game_state(self, game_id):
+        if game_id in self.games.keys():
             return {
                 "sender": 0,
                 "message_type": 12,
-                "game_state": self.games[req["game_id"]],
+                "game_state": self.games[game_id],
                 "response": 200
             }
         else:
@@ -341,6 +341,18 @@ class UDPServer:
 
         return False, False, food
 
+    def check_games(self):
+        now = time.time()
+        for game in self.queue:
+            client_address, recive_time, game_id = game
+            if now - recive_time > 0.2:
+                self.process_game(game_id)
+                resp = self.game_state(game_id)
+
+                resp = str(resp)
+                self.printwt(f'[ RESPONSE to {client_address} ]')
+                self.sock.sendto(resp.encode('utf-8'), client_address)
+                print('\n', resp, '\n')
 
 def main():
     """ Create a UDP Server and handle multiple clients simultaneously """
@@ -349,7 +361,7 @@ def main():
     udp_server_multi_client.configure_server()
     while True:
         udp_server_multi_client.wait_for_client()
-        print("wait")
+        udp_server_multi_client.check_games()
 
 if __name__ == '__main__':
     main()
