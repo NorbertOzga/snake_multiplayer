@@ -174,6 +174,7 @@ class UDPServer:
         }
 
     def game_state(self, game_id):
+        self.check_gameover(game_id)
         if game_id in self.games.keys():
             return {
                 "sender": 0,
@@ -187,6 +188,12 @@ class UDPServer:
                 "message_type": 12,
                 "response": 500
             }
+
+    def check_gameover(self, game_id):
+        if self.games[game_id]["players_num"] == 2 and self.games[game_id]["p1_game_over"] and self.games[game_id]["p2_game_over"]:
+            del self.games[game_id]
+        elif self.games[game_id]["players_num"] == 1 and (self.games[game_id]["p1_game_over"] or self.games[game_id]["p2_game_over"]):
+            del self.games[game_id]
 
     def create_game(self, req):
         game_id = self.get_new_game_id()
