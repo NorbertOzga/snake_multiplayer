@@ -102,6 +102,7 @@ class Body:
         elif message_type == MessageType.LIST_GAMES_SERVER:
             games_num, = struct.unpack("!H", body_bytes[:2])
             
+            body.data["games"] = []
             last_byte_num = 2
             for i in range(games_num):
                 game_id, can_join, name_len = struct.unpack(
