@@ -256,9 +256,9 @@ class UDPServer:
         game_id = data["game_id"]
         current_game = self.games[game_id]
         if current_game["player_1"] == data["user_id"]:
-            current_game["p1_direction"] = data["d"]
+            current_game["p1_direction"] = data["move"]
         elif current_game["player_2"] == data["user_id"]:
-            current_game["p2_direction"] = data["d"]
+            current_game["p2_direction"] = data["move"]
 
     def process_game(self, game_id):
 
