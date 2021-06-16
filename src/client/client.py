@@ -261,3 +261,4 @@ while True:
 				break
 		except:
 			print("error")
+	time.sleep(0.1)
