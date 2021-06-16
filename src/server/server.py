@@ -80,7 +80,7 @@ class UDPServer:
         #except OSError as err:
         #    self.printwt(err)
         except socket.timeout as e:
-            print("no data")
+            pass
 
     def shutdown_server(self):
         """ Shutdown the server """
