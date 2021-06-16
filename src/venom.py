@@ -129,9 +129,9 @@ class Body:
             body.data["game_id"] = game_id
 
         elif message_type == MessageType.JOIN_GAME_SERVER:
-            operation_success = True if body_bytes[:1] == b"\x20" else False
+            operation_success = True if body_bytes[:2] == b"\x20" else False
 
-            is_player_1, = struct.unpack("!H", body_bytes[1:2])
+            is_player_1, = struct.unpack("!H", body_bytes[2:4])
 
             body.data["operation_success"] = operation_success
             body.data["is_player_1"] = True if is_player_1 == 1 else False
