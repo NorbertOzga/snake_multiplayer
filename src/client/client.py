@@ -67,7 +67,7 @@ def drawPoints(player1_points, player2_points):
 
 # Connecting
 sock=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.settimeout(0.1)
+sock.settimeout(0.2)
 SERVER=(SERVER_ADDRESS,SERVER_PORT)
 
 # Draw initial points
@@ -243,7 +243,7 @@ while True:
 		input = lastData
 
 	print(input)
-	if  now - last_update > 1:
+	if  now - last_update > 0.3:
 		if input != None:
 			if lastData != None:
 				generateSnake(lastData["p1"], WHITE)

@@ -31,7 +31,7 @@ class UDPServer:
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.printwt(f'Binding server to {self.host}:{self.port}...')
         self.sock.bind((self.host, self.port))
-        self.sock.settimeout(0.05)
+        self.sock.settimeout(0.2)
         self.printwt(f'Server binded to {self.host}:{self.port}')
 
     def handle_request(self, data, client_address):
@@ -355,7 +355,7 @@ class UDPServer:
         now = time.time()
         for game_id in self.queue.keys():
             recive_time, hosts = self.queue[game_id]
-            if now - recive_time > 0.01:
+            if now - recive_time > 0.5:
                 print("-----------IF--------------------")
                 self.process_game(game_id)
                 resp = self.game_state(game_id)
