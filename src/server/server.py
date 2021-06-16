@@ -51,7 +51,7 @@ class UDPServer:
         elif req["message_type"] == 5:
             resp = self.create_game(req)
         elif req["message_type"] == 7:
-            resp = self.join_game(req)
+            resp = self.join_game(req, client_address)
         elif req["message_type"] == 9:
             resp = self.exit_game(req)
         elif req["message_type"] == 11:
@@ -129,7 +129,7 @@ class UDPServer:
             "response": 200
         }
 
-    def join_game(self, req):
+    def join_game(self, req, client_address):
         game_id = req["game_id"]
         if self.games[game_id]["players_num"] < 2:
             if self.games[game_id]["player_1"] == "":
@@ -140,6 +140,11 @@ class UDPServer:
                 self.games[game_id]["p2"].append([15, 15])
 
             self.games[game_id]["players_num"] += 1
+
+            try:
+                self.queue[game_id][1].append(client_address)
+            except AttributeError:
+                self.queue[game_id] = [time.time(), [client_address]]
 
             return {
                 "sender": 0,
@@ -343,22 +348,16 @@ class UDPServer:
 
     def check_games(self):
         now = time.time()
-        for game_num in range(len(self.queue)):
-            client_address, recive_time, game_id = self.queue[game_num]
-            print("CHECK GAMES")
-            print(now, recive_time)
+        for game_id in self.queue:
+            recive_time, hosts = self.queue[game_id]
             if now - recive_time > 0.2:
                 self.process_game(game_id)
                 resp = self.game_state(game_id)
 
                 resp = str(resp)
-                self.printwt(f'[ RESPONSE to {client_address} ]')
-                self.sock.sendto(resp.encode('utf-8'), client_address)
-                print('\n', resp, '\n')
-            else:
-                self.queue = self.queue[game_num+1:]
-                break
-
+                for host in hosts:
+                    self.sock.sendto(resp.encode('utf-8'), host)
+                self.queue[game_id][0] = time.time()
 def main():
     """ Create a UDP Server and handle multiple clients simultaneously """
 
