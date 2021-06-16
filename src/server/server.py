@@ -59,16 +59,17 @@ class UDPServer:
                 self.games[req["game_id"]]
                 resp = self.store_move(req)
             except KeyError:
-                pass
+                resp = None
 
         else:
             resp = {
                 "sender": 0,
                 "message_type": 12}
         # send response to the client
-        resp = str(resp)
-        self.printwt(f'[ RESPONSE to {client_address} ]')
-        self.sock.sendto(resp.encode('utf-8'), client_address)
+        if resp is not None:
+            resp = str(resp)
+            self.printwt(f'[ RESPONSE to {client_address} ]')
+            self.sock.sendto(resp.encode('utf-8'), client_address)
 
         print('\n', resp, '\n')
 
