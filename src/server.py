@@ -126,14 +126,14 @@ class UDPServer:
             "response": 200
         }
 
-    def join_game(self, req, client_address):
-        game_id = req["game_id"]
+    def join_game(self, data, client_address):
+        game_id = data["game_id"]
         if self.games[game_id]["players_num"] < 2:
             if self.games[game_id]["player_1"] == "":
-                self.games[game_id]["player_1"] = self.users[req["user_id"]]
+                self.games[game_id]["player_1"] = self.users[data["user_id"]]
                 self.games[game_id]["p1"].append([5, 5])
             else:
-                self.games[game_id]["player_2"] = self.users[req["user_id"]]
+                self.games[game_id]["player_2"] = self.users[data["user_id"]]
                 self.games[game_id]["p2"].append([15, 15])
 
             self.games[game_id]["players_num"] += 1
@@ -193,11 +193,11 @@ class UDPServer:
             return True
         return False
 
-    def create_game(self, req):
+    def create_game(self, data):
         game_id = self.get_new_game_id()
         if game_id != -1:
             self.games[game_id] = {
-                "game_name": req["game_name"],
+                "game_name": data["game_name"],
                 "players_num": 0,
                 "player_1": "",
                 "player_2": "",
