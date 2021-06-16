@@ -180,9 +180,9 @@ class Body:
                 "!HH", len(self.data["p1_snake"]), len(self.data["p2_snake"])
             )
             for i in range(len(self.data["p1_snake"])):
-                response += struct.pack("!H", self.data["p1_snake"][i])
+                response += struct.pack("!HH", self.data["p1_snake"][i][0], self.data["p1_snake"][i][1])
             for i in range(len(self.data["p2_snake"])):
-                response += struct.pack("!H", self.data["p2_snake"][i])
+                response += struct.pack("!HH", self.data["p2_snake"][i][0], self.data["p2_snake"][i][1])
 
             return response
 
