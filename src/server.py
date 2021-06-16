@@ -113,6 +113,7 @@ class UDPServer:
             return message.to_bytes()
 
         game_info_list = []
+
         for game_id in self.games:
             can_join = 1 if self.games[game_id]["players_num"] < 2 else 0
             game_name = self.games[game_id]["game_name"]
@@ -121,7 +122,7 @@ class UDPServer:
         body = Body()
         header = Header(sender=0, message_type=MessageType.LIST_GAMES_SERVER)
         body.data["operation_success"] = b'\x20'
-        body.data["games"] = game_info_list,
+        body.data["games"] = game_info_list
         message = Message(header=header, body=body)
         return message.to_bytes()
 
