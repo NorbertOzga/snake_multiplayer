@@ -54,6 +54,8 @@ class Body:
                 "!Hcc5H??", body_bytes[:16]
             )
             p1_snake_len, p2_snake_len = struct.unpack("!HH", body_bytes[16:20])
+            p1_snake = ()
+            p2_snake = ()
             if p1_snake_len > 0:
                 p1_snake = struct.unpack(
                     f"!{p1_snake_len*2}H", body_bytes[20:(p1_snake_len * 4)+ 20]
@@ -75,10 +77,8 @@ class Body:
             body.data["players_num"] = players_num
             body.data["p1_over"] = p1_over
             body.data["p2_over"] = p2_over
-            if p1_snake_len > 0:
-                body.data["p1_snake"] = p1_snake
-            if p2_snake_len > 0:
-                body.data["p2_snake"] = p2_snake
+            body.data["p1_snake"] = p1_snake
+            body.data["p2_snake"] = p2_snake
 
 
         elif message_type == MessageType.LOGIN_CLIENT:
