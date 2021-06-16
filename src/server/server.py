@@ -189,8 +189,8 @@ class UDPServer:
                 "players_num": 0,
                 "player_1": "",
                 "player_2": "",
-                "d1": "",
-                "d2": "",
+                "d1": "r",
+                "d2": "l",
                 "p1": [], # dodałem te dwie linijki, bo inaczej
                 "p2": [], # serwer sypał się przy dołączaniu
                 "f": (10, 10),
