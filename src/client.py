@@ -211,7 +211,7 @@ while True:
 	elif(ch=="Q"):
 		exit(0)
 
-# Old main game loop
+# Main game loop
 last_key = "r"
 last_update = time.time()
 
@@ -239,7 +239,7 @@ while True:
 			sock.close()
 			sys.exit()
 	if last_key != last_last_key:
-		out = composeMessage(MessageType.SEND_MOVE, user_id=USER_ID, game_id=GAME_ID, d=last_key)
+		out = composeMessage(MessageType.SEND_MOVE, user_id=USER_ID, game_id=GAME_ID, d=last_key.encode())
 		#print("out", out)
 		sendMessage(out)
 		last_last_key = last_key
@@ -259,12 +259,20 @@ while True:
 	if True:
 		if input != None:
 			if lastData != None:
+				print("---lastData---")
+				print(lastData["p1_snake"])
+				print(lastData["p2_snake"])
+				print("--------------")
 				generateSnake(lastData["p1_snake"], WHITE)
 				generateSnake(lastData["p2_snake"], WHITE)
 				drawFood(lastData["food"][0], lastData["food"][1], WHITE)
 				lastData = input
 			else:
 				lastData = input
+			print("---input---")
+			print(input["p1_snake"])
+			print(input["p2_snake"])
+			print("-----------")
 			generateSnake(input["p1_snake"], P1_C)
 			generateSnake(input["p2_snake"], P2_C)
 			drawFood(input["food"][0], input["food"][1], FOOD_COLOR)
