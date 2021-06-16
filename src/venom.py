@@ -130,7 +130,7 @@ class Body:
 
         elif message_type == MessageType.JOIN_GAME_SERVER:
             operation_success = True if body_bytes[:1] == b"\x20" else False
-            is_player_1, = struct.unpack("!?", body_bytes[1])
+            is_player_1, = struct.unpack("!?", body_bytes[1:])
 
             body.data["operation_success"] = operation_success
             body.data["is_player_1"] = is_player_1
