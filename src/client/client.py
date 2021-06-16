@@ -204,8 +204,9 @@ while True:
 
 # Old main game loop
 last_key = "r"
+last_update = time.time()
 while True:
-
+	now = time.time()
 	pressed_keys=pygame.key.get_pressed()
 	if pressed_keys[K_UP]:
 		out=composeMessage(11,user_id=USER_ID,game_id=GAME_ID,d="u")
@@ -242,23 +243,24 @@ while True:
 		input = lastData
 
 	print(input)
-	if input != None:
-		if lastData != None:
-			generateSnake(lastData["p1"], WHITE)
-			generateSnake(lastData["p2"], WHITE)
-			drawFood(lastData["f"][0], lastData["f"][1], WHITE)
-			lastData = input
-		else:
-			lastData = input
-		generateSnake(input["p1"], P1_C)
-		generateSnake(input["p2"], P2_C)
-		drawFood(input["f"][0], input["f"][1], FOOD_COLOR)
-		drawPoints(input["pt"][0], input["pt"][1])
-		try:
-			if MYNAME == input['player_1'] and input['p1_game_over'] ==1:
-				break
-			if MYNAME == input['player_2'] and input['p1_game_over'] ==1:
-				break
-		except:
-			print("error")
-	time.sleep(0.1)
+	if  now - last_update > 1:
+		if input != None:
+			if lastData != None:
+				generateSnake(lastData["p1"], WHITE)
+				generateSnake(lastData["p2"], WHITE)
+				drawFood(lastData["f"][0], lastData["f"][1], WHITE)
+				lastData = input
+			else:
+				lastData = input
+			generateSnake(input["p1"], P1_C)
+			generateSnake(input["p2"], P2_C)
+			drawFood(input["f"][0], input["f"][1], FOOD_COLOR)
+			drawPoints(input["pt"][0], input["pt"][1])
+			try:
+				if MYNAME == input['player_1'] and input['p1_game_over'] ==1:
+					break
+				if MYNAME == input['player_2'] and input['p1_game_over'] ==1:
+					break
+			except:
+				print("error")
+			last_update = time.time()
