@@ -73,8 +73,8 @@ class Body:
             body.data["players_num"] = players_num
             body.data["p1_over"] = p1_over
             body.data["p2_over"] = p2_over
-            body.data["p1_snake"] = [(p1_snake[i], p1_snake[i+1]) for i in range(0, len(p1_snake - 1), 2)]
-            body.data["p2_snake"] = [(p2_snake[i], p2_snake[i+1]) for i in range(0, len(p2_snake - 1), 2)]
+            body.data["p1_snake"] = [(p1_snake[i], p1_snake[i+1]) for i in range(0, len(p1_snake) - 1, 2)]
+            body.data["p2_snake"] = [(p2_snake[i], p2_snake[i+1]) for i in range(0, len(p2_snake) - 1, 2)]
 
 
         elif message_type == MessageType.LOGIN_CLIENT:
