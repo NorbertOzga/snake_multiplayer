@@ -59,7 +59,8 @@ class UDPServer:
         else:
             resp = {
                 "sender": 0,
-                "message_type": 12}
+                "message_type": 12
+            }
         # send response to the client
 
         self.printwt(f'[ RESPONSE to {client_address} ]')
@@ -103,37 +104,39 @@ class UDPServer:
         message = Message(header=header, body=body)
         return message.to_bytes()
 
-    def list_games(self, req):
-        if req["user_id"] not in self.users.keys():
-            return {
-                "sender": 0,
-                "message_type": 4,
-                "response": 500
-            }
+    def list_games(self, data):
+        if data["user_id"] not in self.users.keys():
+            body = Body()
+            header = Header(sender=0, message_type=MessageType.LIST_GAMES_SERVER)
+            body.data["operation_success"] = b'\x50'
+            message = Message(header=header, body=body)
+            return message.to_bytes()
 
         game_info_list = []
         for game_id in self.games:
             can_join = 1 if self.games[game_id]["players_num"] < 2 else 0
             game_name = self.games[game_id]["game_name"]
-            game_info_list.append([game_id, can_join, len(game_name), game_name])
+            game_info_list.append({"game_id": game_id, "can_join": can_join, "game_name": game_name})
 
-        return {
-            "sender": 0,
-            "message_type": 4,
-            "number_of_games": len(game_info_list),
-            "list_of_games": game_info_list,
-            "response": 200
-        }
+        body = Body()
+        header = Header(sender=0, message_type=MessageType.LIST_GAMES_SERVER)
+        body.data["operation_success"] = b'\x20'
+        body.data["number_of_games"] = len(game_info_list)
+        body.data["list_of_games"] = game_info_list,
+        message = Message(header=header, body=body)
+        return message.to_bytes()
 
     def join_game(self, data, client_address):
         game_id = data["game_id"]
         if self.games[game_id]["players_num"] < 2:
-            if self.games[game_id]["player_1"] == "":
-                self.games[game_id]["player_1"] = self.users[data["user_id"]]
+            if self.games[game_id]["player_1"] == -1:
+                self.games[game_id]["player_1"] = data["user_id"]
                 self.games[game_id]["p1"].append([5, 5])
+                is_player_1 = True
             else:
-                self.games[game_id]["player_2"] = self.users[data["user_id"]]
+                self.games[game_id]["player_2"] = data["user_id"]
                 self.games[game_id]["p2"].append([15, 15])
+                is_player_1 = False
 
             self.games[game_id]["players_num"] += 1
 
@@ -145,6 +148,7 @@ class UDPServer:
             header = Header(sender=0, message_type=MessageType.JOIN_GAME_SERVER)
             body = Body()
             body.data["operation_success"] = b'\x20'
+            body.data["is_player_1"] = is_player_1
             message = Message(header=header, body=body)
             return message.to_bytes()
         else:
@@ -154,41 +158,49 @@ class UDPServer:
             message = Message(header=header, body=body)
             return message.to_bytes()
 
-    def exit_game(self, req):
-        game_id = req["game_id"]
+    def exit_game(self, data):
+        game_id = data["game_id"]
 
-        if self.games[game_id]["player_1"] == self.users[req["user_id"]]:
-            self.games[game_id]["player_1"] = ""
+        if self.games[game_id]["player_1"] == data["user_id"]:
+            self.games[game_id]["player_1"] = -1
         else:
-            self.games[game_id]["player_2"] = ""
+            self.games[game_id]["player_2"] = -1
 
         self.games[game_id]["players_num"] -= 1
 
-        return {
-            "sender": 0,
-            "message_type": 10,
-            "response": 200,
-        }
+        header = Header(sender=0, message_type=MessageType.EXIT_GAME_SERVER)
+        body = Body()
+        body.data["operation_success"] = b'\x20'
+        message = Message(header=header, body=body)
+        return message.to_bytes()
 
     def game_state(self, game_id):
         if game_id in self.games.keys():
-            return {
-                "sender": 0,
-                "message_type": 12,
-                "game_state": self.games[game_id],
-                "response": 200
-            }
+            header = Header(sender=0, message_type=MessageType.SEND_STATE)
+            body = Body()
+            body.data["operation_success"] = b'\x20'
+            body.data["game_id"] = game_id
+            body.data["p1_direction"] = self.games[game_id]["p1_direction"]
+            body.data["p2_direction"] = self.games[game_id]["p2_direction"]
+            body.data["food"] = self.games[game_id]["food"]
+            body.data["pt1"] = self.games[game_id]["pt1"]
+            body.data["pt2"] = self.games[game_id]["pt2"]
+            body.data["players_num"] = self.games[game_id]["players_num"]
+            body.data["p1_over"] = self.games[game_id]["p1_over"]
+            body.data["p2_over"] = self.games[game_id]["p2_over"]
+            message = Message(header=header, body=body)
+            return message.to_bytes()
         else:
-            return {
-                "sender": 0,
-                "message_type": 12,
-                "response": 500
-            }
+            header = Header(sender=0, message_type=MessageType.SEND_STATE)
+            body = Body()
+            body.data["operation_success"] = b'\x50'
+            message = Message(header=header, body=body)
+            return message.to_bytes()
 
     def check_gameover(self, game_id):
-        if self.games[game_id]["players_num"] == 2 and self.games[game_id]["p1_game_over"] and self.games[game_id]["p2_game_over"]:
+        if self.games[game_id]["players_num"] == 2 and self.games[game_id]["p1_over"] and self.games[game_id]["p2_over"]:
             return True
-        elif self.games[game_id]["players_num"] == 1 and (self.games[game_id]["p1_game_over"] or self.games[game_id]["p2_game_over"]):
+        elif self.games[game_id]["players_num"] == 1 and (self.games[game_id]["p1_over"] or self.games[game_id]["p2_over"]):
             return True
         return False
 
@@ -198,16 +210,17 @@ class UDPServer:
             self.games[game_id] = {
                 "game_name": data["game_name"],
                 "players_num": 0,
-                "player_1": "",
-                "player_2": "",
-                "d1": "r",
-                "d2": "l",
-                "p1": [], # dodałem te dwie linijki, bo inaczej
-                "p2": [], # serwer sypał się przy dołączaniu
-                "f": (10, 10),
-                "pt": [0, 0],
-                "p1_game_over": 0,
-                "p2_game_over": 0
+                "player_1": -1,
+                "player_2": -1,
+                "p1_direction": "r",
+                "p2_direction": "l",
+                "p1_snake": [],
+                "p2_snake": [],
+                "food": (10, 10),
+                "pt1": 0,
+                "pt2": 0,
+                "p1_over": 0,
+                "p2_over": 0
             }
             header = Header(sender=0, message_type=MessageType.CREATE_GAME_SERVER)
             body = Body()
@@ -239,41 +252,28 @@ class UDPServer:
 
         return -1
 
-    def store_move(self, req):
-        game_id = req["game_id"]
+    def store_move(self, data):
+        game_id = data["game_id"]
         current_game = self.games[game_id]
-        print(current_game)
-        if current_game["player_1"] == self.users[req["user_id"]]:
-            #if not self.direction_problem(req["d"], current_game["d1"]):
-            current_game["d1"] = req["d"]
-        elif current_game["player_2"] == self.users[req["user_id"]]:
-            #if not self.direction_problem(req["d"], current_game["d2"]):
-            current_game["d2"] = req["d"]
-
-    @staticmethod
-    def direction_problem(old_direction, new_direction):
-        if old_direction == "" or new_direction == "":
-            return False
-        if (old_direction == "u" and new_direction == "d") or (old_direction == "d" and new_direction == "u"):
-            return True
-        elif (old_direction == "r" and new_direction == "l") or (old_direction == "l" and new_direction == "r"):
-            return True
-        return False
+        if current_game["player_1"] == data["user_id"]:
+            current_game["p1_direction"] = data["d"]
+        elif current_game["player_2"] == data["user_id"]:
+            current_game["p2_direction"] = data["d"]
 
     def process_game(self, game_id):
 
         curr_game = self.games[game_id]
-        s1 = curr_game["p1"]
-        s2 = curr_game["p2"]
-        d1 = curr_game["d1"]
-        d2 = curr_game["d2"]
-        food = curr_game["f"]
+        s1 = curr_game["p1_snake"]
+        s2 = curr_game["p2_snake"]
+        d1 = curr_game["p1_direction"]
+        d2 = curr_game["p2_direction"]
+        food = curr_game["food"]
 
         p1_eat_food, p2_eat_food, new_food = self.check_food(s1, s2, food)
         if p1_eat_food:
-            curr_game["pt"][0] += 10
+            curr_game["pt1"] += 10
         if p2_eat_food:
-            curr_game["pt"][1] += 10
+            curr_game["pt2"] += 10
         if s1:
             s1 = self.move_snake(s1, d1, p1_eat_food)
         if s2:
@@ -281,11 +281,11 @@ class UDPServer:
 
         p1_collision, p2_collision = self.check_collisions(s1, s2)
 
-        curr_game["p1"] = s1
-        curr_game["p2"] = s2
-        curr_game["f"] = new_food
-        curr_game["p1_game_over"] = p1_collision
-        curr_game["p2_game_over"] = p2_collision
+        curr_game["p1_snake"] = s1
+        curr_game["p2_snake"] = s2
+        curr_game["food"] = new_food
+        curr_game["p1_over"] = p1_collision
+        curr_game["p2_over"] = p2_collision
 
         self.games[game_id] = curr_game
 
@@ -311,7 +311,6 @@ class UDPServer:
 
     def check_collisions(self, s1, s2):
         p1_collision, p2_collision = 0, 0
-        print(s1, s2)
         if s1:
             if s1[0][0] < 0 or s1[0][0] > self.game_shape[0] or s1[0][1] < 0 or s1[0][1] > self.game_shape[1]:
                 p1_collision = 1
@@ -346,7 +345,6 @@ class UDPServer:
         for game_id in self.queue.keys():
             recive_time, hosts = self.queue[game_id]
             if now - recive_time > 0.05:
-                print("-----------IF--------------------")
                 self.process_game(game_id)
                 resp = self.game_state(game_id)
 
@@ -356,8 +354,6 @@ class UDPServer:
                     self.queue[game_id][0] = time.time()
                 except KeyError:
                     continue
-            else:
-                print("---------------ELSE---------------")
 
         to_remove = []
         for game_id in self.queue.keys():
