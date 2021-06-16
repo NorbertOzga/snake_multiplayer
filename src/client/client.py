@@ -245,7 +245,7 @@ while True:
 		input = lastData
 	last_key = check_last_pressed_key(last_key)
 	print(input)
-	if now - last_update > 0.1 or True:
+	if True:
 		if input != None:
 			if lastData != None:
 				generateSnake(lastData["p1"], WHITE)
