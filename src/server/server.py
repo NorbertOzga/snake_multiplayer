@@ -345,6 +345,8 @@ class UDPServer:
         now = time.time()
         for game_num in range(len(self.queue)):
             client_address, recive_time, game_id = self.queue[game_num]
+            print("CHECK GAMES")
+            print(now, recive_time)
             if now - recive_time > 0.2:
                 self.process_game(game_id)
                 resp = self.game_state(game_id)
