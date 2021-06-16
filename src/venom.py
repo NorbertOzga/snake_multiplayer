@@ -54,15 +54,19 @@ class Body:
                 "!Hcc5H??", body_bytes[:16]
             )
             p1_snake_len, p2_snake_len = struct.unpack("!HH", body_bytes[16:20])
-            p1_snake = struct.unpack(
-                f"!{p1_snake_len}H", body_bytes[20:(p1_snake_len * 2)+ 20]
-            )
-            p2_snake = struct.unpack(
-                f"!{p2_snake_len}H", 
-                body_bytes[
-                    (p1_snake_len * 2) + 20: (p2_snake_len * 2) + (p1_snake_len * 2) + 20
-                ],
-            )
+            p1_snake = ()
+            p2_snake = ()
+            if p1_snake_len > 0:
+                p1_snake = struct.unpack(
+                    f"!{p1_snake_len*2}H", body_bytes[20:(p1_snake_len * 4)+ 20]
+                )
+            if p2_snake_len > 0:
+                p2_snake = struct.unpack(
+                    f"!{p2_snake_len*2}H", 
+                    body_bytes[
+                        (p1_snake_len * 4) + 20: (p2_snake_len * 4) + (p1_snake_len * 4) + 20
+                    ],
+                )
 
             body.data["game_id"] = game_id
             body.data["p1_direction"] = p1_direction
@@ -73,8 +77,14 @@ class Body:
             body.data["players_num"] = players_num
             body.data["p1_over"] = p1_over
             body.data["p2_over"] = p2_over
-            body.data["p1_snake"] = [(p1_snake[i], p1_snake[i+1]) for i in range(0, len(p1_snake), 2)]
-            body.data["p2_snake"] = [(p2_snake[i], p2_snake[i+1]) for i in range(0, len(p2_snake), 2)]
+            if p1_snake_len > 0:
+                body.data["p1_snake"] = [(p1_snake[i], p1_snake[i+1]) for i in range(0, len(p1_snake), 2)]
+            else:
+                body.data["p1_snake"] = []
+            if p2_snake_len > 0:
+                body.data["p2_snake"] = [(p2_snake[i], p2_snake[i+1]) for i in range(0, len(p2_snake), 2)]
+            else:
+                body.data["p2_snake"] = []
 
 
         elif message_type == MessageType.LOGIN_CLIENT:
