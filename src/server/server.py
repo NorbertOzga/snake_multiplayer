@@ -353,7 +353,7 @@ class UDPServer:
 
     def check_games(self):
         now = time.time()
-        for game_id in self.queue:
+        for game_id in self.queue.keys():
             recive_time, hosts = self.queue[game_id]
             if now - recive_time > 0.2:
                 self.process_game(game_id)
