@@ -67,7 +67,7 @@ def drawPoints(player1_points, player2_points):
 
 # Connecting
 sock=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.settimeout(0.05)
+sock.settimeout(0.2)
 SERVER=(SERVER_ADDRESS,SERVER_PORT)
 
 # Draw initial points
@@ -117,7 +117,7 @@ def getMessage():
 		data,address=sock.recvfrom(1024)
 		data=data.decode("UTF-8").replace("\'","\"")
 	except socket.timeout as e:
-		return {"response": 200}
+		return {"response": 200, "message_type": 20}
 	return json.loads(data)
 
 # Checks if message is 200 OK

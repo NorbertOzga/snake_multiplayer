@@ -142,7 +142,7 @@ class UDPServer:
 
             try:
                 self.queue[game_id][1].append(client_address)
-            except AttributeError:
+            except KeyError:
                 self.queue[game_id] = [time.time(), [client_address]]
 
             return {
