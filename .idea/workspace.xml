@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dca0d820-b0ca-4433-8362-0c165423a124" name="Default Changelist" comment="zmiany">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/server.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -54,13 +53,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1623322941530</updated>
-    </task>
-    <task id="LOCAL-00030" summary="change receiving data">
-      <created>1623850569329</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1623850569329</updated>
     </task>
     <task id="LOCAL-00031" summary="change receiving data">
       <created>1623850690329</created>
@@ -398,7 +390,14 @@
       <option name="project" value="LOCAL" />
       <updated>1623870553305</updated>
     </task>
-    <option name="localTasksCounter" value="79" />
+    <task id="LOCAL-00079" summary="zmiany">
+      <created>1623874042896</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1623874042896</updated>
+    </task>
+    <option name="localTasksCounter" value="80" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
