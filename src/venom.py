@@ -95,7 +95,7 @@ class Body:
             body.data["user_id"] = user_id
 
         elif message_type == MessageType.LIST_GAMES_CLIENT:
-            user_id = struct.unpack("!H", body_bytes)
+            user_id, = struct.unpack("!H", body_bytes)
 
             body.data["user_id"] = user_id
 
