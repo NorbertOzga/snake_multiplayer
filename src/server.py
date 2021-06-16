@@ -2,7 +2,6 @@ import socket
 from datetime import datetime
 import random
 import time
-from ..venom.venom import *
 
 
 class UDPServer:

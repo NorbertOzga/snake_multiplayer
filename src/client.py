@@ -8,7 +8,7 @@ import socket
 import json
 import time
 import errno
-from ..venom import *
+from src.venom import *
 
 # Initialization
 pygame.init()
