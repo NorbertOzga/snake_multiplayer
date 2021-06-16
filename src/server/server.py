@@ -208,7 +208,9 @@ class UDPServer:
                 "p1": [], # dodałem te dwie linijki, bo inaczej
                 "p2": [], # serwer sypał się przy dołączaniu
                 "f": (10, 10),
-                "pt": [0, 0]
+                "pt": [0, 0],
+                "p1_game_over": 0,
+                "p2_game_over": 0
             }
             return {
                 "sender": 0,
