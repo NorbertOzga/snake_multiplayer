@@ -174,7 +174,6 @@ class UDPServer:
         }
 
     def game_state(self, game_id):
-        self.check_gameover(game_id)
         if game_id in self.games.keys():
             return {
                 "sender": 0,
@@ -191,11 +190,10 @@ class UDPServer:
 
     def check_gameover(self, game_id):
         if self.games[game_id]["players_num"] == 2 and self.games[game_id]["p1_game_over"] and self.games[game_id]["p2_game_over"]:
-            del self.games[game_id]
-            del self.queue[game_id]
+            return True
         elif self.games[game_id]["players_num"] == 1 and (self.games[game_id]["p1_game_over"] or self.games[game_id]["p2_game_over"]):
-            del self.games[game_id]
-            del self.queue[game_id]
+            return True
+        return False
 
     def create_game(self, req):
         game_id = self.get_new_game_id()
@@ -355,7 +353,7 @@ class UDPServer:
         now = time.time()
         for game_id in self.queue.keys():
             recive_time, hosts = self.queue[game_id]
-            if now - recive_time > 0.2:
+            if now - recive_time > 0.1:
                 self.process_game(game_id)
                 resp = self.game_state(game_id)
 
@@ -367,6 +365,14 @@ class UDPServer:
                 except KeyError:
                     continue
 
+        to_remove = []
+        for game_id in self.queue.keys():
+            if self.check_gameover(game_id):
+                to_remove.append(game_id)
+
+        for game_id in to_remove:
+            del self.games[game_id]
+            del self.queue[game_id]
 
 def main():
     """ Create a UDP Server and handle multiple clients simultaneously """
