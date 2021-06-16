@@ -113,6 +113,7 @@ class UDPServer:
             return message.to_bytes()
 
         game_info_list = []
+        print(self.games)
         for game_id in self.games:
             can_join = 1 if self.games[game_id]["players_num"] < 2 else 0
             game_name = self.games[game_id]["game_name"]
