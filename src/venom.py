@@ -130,12 +130,11 @@ class Body:
 
         elif message_type == MessageType.JOIN_GAME_SERVER:
             operation_success = True if body_bytes[:1] == b"\x20" else False
-            tmp = b""
-            tmp += body_bytes[1]
-            is_player_1, = struct.unpack("!?", tmp)
+
+            is_player_1, = struct.unpack("!H", body_bytes[1:2])
 
             body.data["operation_success"] = operation_success
-            body.data["is_player_1"] = is_player_1
+            body.data["is_player_1"] = True if is_player_1 == 1 else False
 
         elif message_type == MessageType.CREATE_GAME_CLIENT:
             user_id, game_name_len = struct.unpack("!HH", body_bytes[:4])
@@ -229,7 +228,7 @@ class Body:
             else:
                 response = b"\x50"
 
-            response += struct.pack("!?", self.data["is_player_1"])
+            response += struct.pack("!H", 1 if self.data["is_player_1"] else 0)
 
             return response
 
