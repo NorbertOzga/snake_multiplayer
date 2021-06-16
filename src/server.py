@@ -131,11 +131,11 @@ class UDPServer:
         if self.games[game_id]["players_num"] < 2:
             if self.games[game_id]["player_1"] == -1:
                 self.games[game_id]["player_1"] = data["user_id"]
-                self.games[game_id]["p1"].append([5, 5])
+                self.games[game_id]["p1_snake"].append([5, 5])
                 is_player_1 = True
             else:
                 self.games[game_id]["player_2"] = data["user_id"]
-                self.games[game_id]["p2"].append([15, 15])
+                self.games[game_id]["p2_snake"].append([15, 15])
                 is_player_1 = False
 
             self.games[game_id]["players_num"] += 1
