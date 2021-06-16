@@ -55,8 +55,8 @@ class UDPServer:
         elif req["message_type"] == 9:
             resp = self.exit_game(req)
         elif req["message_type"] == 11:
-            resp = self.store_move(req)
-
+            self.store_move(req)
+            return
         else:
             resp = {
                 "sender": 0,
@@ -251,14 +251,6 @@ class UDPServer:
         elif current_game["player_2"] == self.users[req["user_id"]]:
             #if not self.direction_problem(req["d"], current_game["d2"]):
             current_game["d2"] = req["d"]
-        else:
-            return {
-                "response": 500
-            }
-
-        return {
-            "response": 200
-        }
 
     @staticmethod
     def direction_problem(old_direction, new_direction):

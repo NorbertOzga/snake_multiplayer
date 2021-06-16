@@ -117,7 +117,7 @@ def getMessage():
 		data,address=sock.recvfrom(1024)
 		data=data.decode("UTF-8").replace("\'","\"")
 	except socket.timeout as e:
-		return {"response": 200, "message_type": 20}
+		pass
 	return json.loads(data)
 
 # Checks if message is 200 OK
