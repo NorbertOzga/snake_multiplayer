@@ -353,7 +353,7 @@ class UDPServer:
                 resp = self.game_state(game_id)
 
                 for host in hosts:
-                    self.sock.sendto(resp.encode('utf-8'), host)
+                    self.sock.sendto(resp, host)
                 try:
                     self.queue[game_id][0] = time.time()
                 except KeyError:
