@@ -44,17 +44,17 @@ class UDPServer:
         print('\n', req, '\n')
 
         if req.header.message_type == MessageType.LOGIN_CLIENT:
-            resp = self.register_user(req.data)
+            resp = self.register_user(req.body.data)
         elif req.header.message_type == MessageType.LIST_GAMES_CLIENT:
-            resp = self.list_games(req.data)
+            resp = self.list_games(req.body.data)
         elif req.header.message_type == MessageType.CREATE_GAME_CLIENT:
-            resp = self.create_game(req.data)
+            resp = self.create_game(req.body.data)
         elif req.header.message_type == MessageType.JOIN_GAME_CLIENT:
             resp = self.join_game(req, client_address)
         elif req.header.message_type == MessageType.EXIT_GAME_CLIENT:
-            resp = self.exit_game(req.data)
+            resp = self.exit_game(req.body.data)
         elif req.header.message_type == MessageType.SEND_MOVE:
-            self.store_move(req.data)
+            self.store_move(req.body.data)
             return
         else:
             resp = {
