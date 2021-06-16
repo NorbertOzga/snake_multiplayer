@@ -20,7 +20,7 @@ FramePerSec=pygame.time.Clock()
 # Game size (defines window size)
 SIZE_X=25
 SIZE_Y=25
-POINT_SIZE=32
+POINT_SIZE=24
 
 # Colors
 BLACK=(0,0,0)
