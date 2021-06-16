@@ -2,8 +2,7 @@ import socket
 from datetime import datetime
 import random
 import time
-
-
+from ..venom import *
 class UDPServer:
     games = {}  # list of current games
     users = {}  # "IP": "user ID"
@@ -39,23 +38,23 @@ class UDPServer:
         ''' Handle the client '''
         # handle request
 
-        req = data.decode('utf-8')
+        req = Message.from_bytes(data)
         self.printwt(f'[ REQUEST from {client_address} ]')
         print('\n', req, '\n')
 
         req = eval(req)
-        if req["message_type"] == 1:
-            resp = self.register_user(req)
-        elif req["message_type"] == 3:
-            resp = self.list_games(req)
-        elif req["message_type"] == 5:
-            resp = self.create_game(req)
-        elif req["message_type"] == 7:
+        if req.header.message_type == MessageType.LOGIN_CLIENT:
+            resp = self.register_user(req.data)
+        elif req.header.message_type == MessageType.LIST_GAMES_CLIENT:
+            resp = self.list_games(req.data)
+        elif req.header.message_type == MessageType.CREATE_GAME_CLIENT:
+            resp = self.create_game(req.data)
+        elif req.header.message_type == MessageType.JOIN_GAME_CLIENT:
             resp = self.join_game(req, client_address)
-        elif req["message_type"] == 9:
-            resp = self.exit_game(req)
-        elif req["message_type"] == 11:
-            self.store_move(req)
+        elif req.header.message_type == MessageType.EXIT_GAME_CLIENT:
+            resp = self.exit_game(req.data)
+        elif req.header.message_type == MessageType.SEND_MOVE:
+            self.store_move(req.data)
             return
         else:
             resp = {
@@ -87,24 +86,23 @@ class UDPServer:
         self.printwt('Shutting down server...')
         self.sock.close()
 
-    def register_user(self, req):
-        nickname = req["nickname"]
+    def register_user(self, data):
+        nickname = data["nickname"]
         if nickname not in self.users.values():
             user_id = self.get_new_user_id()
             if user_id != -1:
                 self.users[user_id] = nickname
-                return {
-                    "sender": 0,
-                    "message_type": 2,
-                    "response": 200,
-                    "user_id": user_id
-                }
+                header = Header(sender=0, message_type=MessageType.LOGIN_SERVER)
+                body = Body()
+                body.data["operation_success"] = b'\x20'
+                body.data["user_id"] = user_id
+                message = Message(header=header, body=body)
+                return message.to_bytes()
 
-        return {
-            "sender": 0,
-            "message_type": 2,
-            "response": 500
-        }
+        body.data["operation_success"] = b'\x50'
+        body.data["user_id"] = user_id
+        message = Message(header=header, body=body)
+        return
 
     def list_games(self, req):
         if req["user_id"] not in self.users.keys():
