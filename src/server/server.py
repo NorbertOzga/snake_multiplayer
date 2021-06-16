@@ -17,9 +17,9 @@ class UDPServer:
 
     def printwt(self, msg):
         ''' Print message with current date and time '''
-        print(self.games)
+
         current_date_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        print(f'[{current_date_time}] {msg}')
+        #print(f'[{current_date_time}] {msg}')
 
     def configure_server(self):
         ''' Configure the server '''
@@ -41,7 +41,7 @@ class UDPServer:
 
         req = data.decode('utf-8')
         self.printwt(f'[ REQUEST from {client_address} ]')
-        print('\n', req, '\n')
+        #print('\n', req, '\n')
 
         req = eval(req)
         if req["message_type"] == 1:
@@ -81,8 +81,7 @@ class UDPServer:
             # handle client's request
 
             self.handle_request(data, client_address)
-        #except OSError as err:
-        #    self.printwt(err)
+
         except socket.timeout as e:
             pass
 
