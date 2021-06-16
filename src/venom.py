@@ -96,7 +96,7 @@ class Body:
             body.data["user_id"] = user_id
 
         elif message_type == MessageType.LIST_GAMES_SERVER:
-            games_num = struct.unpack("!H", body_bytes[:2])
+            games_num, = struct.unpack("!H", body_bytes[:2])
             
             last_byte_num = 2
             for i in range(games_num):
@@ -125,8 +125,10 @@ class Body:
 
         elif message_type == MessageType.JOIN_GAME_SERVER:
             operation_success = True if body_bytes[:1] == b"\x20" else False
+            is_player_1, = struct.unpack("!?", body_bytes[1])
 
             body.data["operation_success"] = operation_success
+            body.data["is_player_1"] = is_player_1
 
         return body
 
@@ -204,9 +206,13 @@ class Body:
 
         elif message_type == MessageType.JOIN_GAME_SERVER:
             if self.data["operation_success"]:
-                return b"\x20"
+                response = b"\x20"
             else:
-                return b"\x50"
+                response = b"\x50"
+
+            response += struct.pack("!?", self.data["is_player_1"])
+
+            return response
 
 
 class Message:
