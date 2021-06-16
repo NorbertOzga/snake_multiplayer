@@ -227,7 +227,7 @@ while True:
 	pygame.display.update()
 	FramePerSec.tick(FPS)
 	print("GAME")
-	time.sleep(0.1)
+	time.sleep(1)
 
 	data, address = sock.recvfrom(1024)
 

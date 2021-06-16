@@ -8,6 +8,7 @@ class UDPServer:
     games = {}  # list of current games
     users = {}  # "IP": "user ID"
     game_shape = (25, 25)
+    queue = []
 
     def __init__(self, host, port):
         self.host = host
@@ -54,8 +55,7 @@ class UDPServer:
             resp = self.exit_game(req)
         elif req["message_type"] == 11:
             resp = self.store_move(req)
-            self.process_game(game_id=req["game_id"])
-            resp = self.game_state(req)
+            self.queue.append([client_address, time.time(), req["game_id"]])
         else:
             resp = {
                 "sender": 0,
@@ -346,6 +346,7 @@ def main():
     udp_server_multi_client.configure_server()
     while True:
         udp_server_multi_client.wait_for_client()
+        print("wait")
 
 
 if __name__ == '__main__':
