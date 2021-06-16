@@ -221,12 +221,11 @@ class Body:
             return struct.pack("!HH", self.data["user_id"], self.data["game_id"])
 
         elif message_type == MessageType.JOIN_GAME_SERVER:
-            if self.data["operation_success"]:
-                response = b"\x20"
-            else:
-                response = b"\x50"
 
-            response += struct.pack("!H", 1 if self.data["is_player_1"] else 0)
+            response = struct.pack(
+                "!HH", 
+                b"\x20" if self.data["operation_success"] else b"\x50",
+                1 if self.data["is_player_1"] else 0)
 
             return response
 
