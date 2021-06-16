@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dca0d820-b0ca-4433-8362-0c165423a124" name="Default Changelist" comment="zmiany" />
+    <list default="true" id="dca0d820-b0ca-4433-8362-0c165423a124" name="Default Changelist" comment="zmiany">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/server.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -51,20 +54,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1623322941530</updated>
-    </task>
-    <task id="LOCAL-00025" summary="handle game over">
-      <created>1623823189407</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1623823189407</updated>
-    </task>
-    <task id="LOCAL-00026" summary="add default move direction when create game state">
-      <created>1623825351371</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1623825351371</updated>
     </task>
     <task id="LOCAL-00027" summary="correcting a typo">
       <created>1623825485714</created>
@@ -395,7 +384,21 @@
       <option name="project" value="LOCAL" />
       <updated>1623869366249</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="zmiany">
+      <created>1623869614808</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1623869614808</updated>
+    </task>
+    <task id="LOCAL-00075" summary="zmiany">
+      <created>1623869917626</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1623869917626</updated>
+    </task>
+    <option name="localTasksCounter" value="76" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
