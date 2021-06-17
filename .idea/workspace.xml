@@ -2,6 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dca0d820-b0ca-4433-8362-0c165423a124" name="Default Changelist" comment="zmiany">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/client.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/client.pem" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/client.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/client.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server.key" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server.pem" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/server.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -53,34 +59,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1623322941530</updated>
-    </task>
-    <task id="LOCAL-00063" summary="commit">
-      <created>1623865801439</created>
-      <option name="number" value="00063" />
-      <option name="presentableId" value="LOCAL-00063" />
-      <option name="project" value="LOCAL" />
-      <updated>1623865801439</updated>
-    </task>
-    <task id="LOCAL-00064" summary="commit">
-      <created>1623866245517</created>
-      <option name="number" value="00064" />
-      <option name="presentableId" value="LOCAL-00064" />
-      <option name="project" value="LOCAL" />
-      <updated>1623866245517</updated>
-    </task>
-    <task id="LOCAL-00065" summary="commit">
-      <created>1623867186415</created>
-      <option name="number" value="00065" />
-      <option name="presentableId" value="LOCAL-00065" />
-      <option name="project" value="LOCAL" />
-      <updated>1623867186415</updated>
-    </task>
-    <task id="LOCAL-00066" summary="zmiany">
-      <created>1623868311009</created>
-      <option name="number" value="00066" />
-      <option name="presentableId" value="LOCAL-00066" />
-      <option name="project" value="LOCAL" />
-      <updated>1623868311009</updated>
     </task>
     <task id="LOCAL-00067" summary="zmiany">
       <created>1623868754579</created>
@@ -397,7 +375,35 @@
       <option name="project" value="LOCAL" />
       <updated>1623889071424</updated>
     </task>
-    <option name="localTasksCounter" value="112" />
+    <task id="LOCAL-00112" summary="zmiany">
+      <created>1623889111091</created>
+      <option name="number" value="00112" />
+      <option name="presentableId" value="LOCAL-00112" />
+      <option name="project" value="LOCAL" />
+      <updated>1623889111091</updated>
+    </task>
+    <task id="LOCAL-00113" summary="zmiany">
+      <created>1623892365025</created>
+      <option name="number" value="00113" />
+      <option name="presentableId" value="LOCAL-00113" />
+      <option name="project" value="LOCAL" />
+      <updated>1623892365025</updated>
+    </task>
+    <task id="LOCAL-00114" summary="zmiany">
+      <created>1623892487366</created>
+      <option name="number" value="00114" />
+      <option name="presentableId" value="LOCAL-00114" />
+      <option name="project" value="LOCAL" />
+      <updated>1623892487366</updated>
+    </task>
+    <task id="LOCAL-00115" summary="zmiany">
+      <created>1623892791172</created>
+      <option name="number" value="00115" />
+      <option name="presentableId" value="LOCAL-00115" />
+      <option name="project" value="LOCAL" />
+      <updated>1623892791172</updated>
+    </task>
+    <option name="localTasksCounter" value="116" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

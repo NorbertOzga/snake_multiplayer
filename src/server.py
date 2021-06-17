@@ -4,12 +4,6 @@ import random
 import time
 from venom import *
 import threading
-import os
-import ssl
-
-
-def create_key():
-    os.system('''openssl req -new -x509 -days 365 -nodes -out client.pem -keyout client.key -subj "/C=PL/ST=Lublin/L=Lublin/O=PAS-Snake/OU=IT Department/CN=SNAKE" ''')
 
 
 class UDPServer:
@@ -40,8 +34,6 @@ class UDPServer:
         self.printwt(f'Binding server to {self.host}:{self.port}...')
         self.sock.bind((self.host, self.port))
         self.sock.settimeout(0.2)
-        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-
         self.printwt(f'Server binded to {self.host}:{self.port}')
 
     def handle_request(self, data, client_address):
@@ -82,21 +74,10 @@ class UDPServer:
         try:
             # receive message from a client
 
-            data, client_address = self.sock.accept()
-            secure_sock = ssl.wrap_socket(client_address, server_side=True, ca_certs="client.pem", certfile="server.pem",
-                                          keyfile="server.key", cert_reqs=ssl.CERT_REQUIRED,
-                                          ssl_version=ssl.PROTOCOL_TLSv1_2)
-            cert = secure_sock.getpeercert()
-            if not cert or ('commonName', 'SNAKE') not in cert['subject'][5]: raise Exception("ERROR")
+            data, client_address = self.sock.recvfrom(1024)
+            # handle client's request
 
-            try:
-                data = secure_sock.read(1024)
-                self.handle_request(data, client_address)
-                secure_sock.write(data)
-            finally:
-                secure_sock.close()
-                self.sock.close()
-
+            self.handle_request(data, client_address)
 
         except socket.timeout as e:
             pass
@@ -394,8 +375,7 @@ class UDPServer:
 
 
 def main():
-    if not os.path.exists("server.pem") or not os.path.exists("server.key"):
-        create_key()
+    """ Create a UDP Server and handle multiple clients simultaneously """
 
     udp_server_multi_client = UDPServer('0.0.0.0', 10000)
     udp_server_multi_client.configure_server()
