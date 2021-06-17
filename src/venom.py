@@ -29,7 +29,7 @@ class Header:
         self.message_type = message_type
 
     def to_bytes(self):
-        return struct.pack("!bb", self.sender, self.message_type.value)       
+        return struct.pack("!bb", self.sender, self.message_type.value)
 
 
 class Body:
@@ -272,7 +272,8 @@ class Message:
     def to_bytes(self, secret) -> bytes:
         if self.header is None or self.body is None:
             raise ValueError("Header or body is None.")
-
+        print(self.header.to_bytes())
+        print(self.body.to_bytes(self.header.message_type).decode())
         mystring = self.header.to_bytes() + self.body.to_bytes(self.header.message_type).decode()
         mybytes = mystring.encode('utf-8')
         myint = int.from_bytes(mybytes, 'little')
