@@ -255,6 +255,7 @@ class Message:
 
     @staticmethod
     def from_bytes(message_bytes: bytes, secret):
+        print(message_bytes)
         message_bytes = int(message_bytes.decode("utf-8")) // secret
         message_bytes = message_bytes.to_bytes((message_bytes.bit_length() + 7) // 8, 'little')
         print(message_bytes)
