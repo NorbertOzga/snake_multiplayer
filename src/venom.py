@@ -35,8 +35,8 @@ class Header:
 class Body:
     @staticmethod
     def from_bytes(
-            body_bytes: bytes,
-            message_type: MessageType
+        body_bytes: bytes,
+        message_type: MessageType
     ):
 
         body = Body()
@@ -58,13 +58,13 @@ class Body:
             p2_snake = ()
             if p1_snake_len > 0:
                 p1_snake = struct.unpack(
-                    f"!{p1_snake_len * 2}H", body_bytes[20:(p1_snake_len * 4) + 20]
+                    f"!{p1_snake_len*2}H", body_bytes[20:(p1_snake_len * 4)+ 20]
                 )
             if p2_snake_len > 0:
                 p2_snake = struct.unpack(
-                    f"!{p2_snake_len * 2}H",
+                    f"!{p2_snake_len*2}H",
                     body_bytes[
-                    (p1_snake_len * 4) + 20: (p2_snake_len * 4) + (p1_snake_len * 4) + 20
+                        (p1_snake_len * 4) + 20: (p2_snake_len * 4) + (p1_snake_len * 4) + 20
                     ],
                 )
 
@@ -78,11 +78,11 @@ class Body:
             body.data["p1_over"] = p1_over
             body.data["p2_over"] = p2_over
             if p1_snake_len > 0:
-                body.data["p1_snake"] = [(p1_snake[i], p1_snake[i + 1]) for i in range(0, len(p1_snake), 2)]
+                body.data["p1_snake"] = [(p1_snake[i], p1_snake[i+1]) for i in range(0, len(p1_snake), 2)]
             else:
                 body.data["p1_snake"] = []
             if p2_snake_len > 0:
-                body.data["p2_snake"] = [(p2_snake[i], p2_snake[i + 1]) for i in range(0, len(p2_snake), 2)]
+                body.data["p2_snake"] = [(p2_snake[i], p2_snake[i+1]) for i in range(0, len(p2_snake), 2)]
             else:
                 body.data["p2_snake"] = []
 
@@ -116,12 +116,12 @@ class Body:
             last_byte_num = 2
             for i in range(games_num):
                 game_id, can_join, name_len = struct.unpack(
-                    "!H?b", body_bytes[last_byte_num:last_byte_num + 4]
+                    "!H?b", body_bytes[last_byte_num:last_byte_num+4]
                 )
 
                 game_name = body_bytes[
-                            last_byte_num + 4:last_byte_num + 4 + name_len
-                            ].decode("ascii")
+                    last_byte_num+4:last_byte_num+4+name_len
+                ].decode("ascii")
 
                 last_byte_num += 4 + name_len
 
@@ -146,7 +146,7 @@ class Body:
 
         elif message_type == MessageType.CREATE_GAME_CLIENT:
             user_id, game_name_len = struct.unpack("!HH", body_bytes[:4])
-            game_name = body_bytes[4:game_name_len + 4].decode("ascii")
+            game_name = body_bytes[4:game_name_len+4].decode("ascii")
 
             body.data["user_id"] = user_id
             body.data["game_name"] = game_name
@@ -252,13 +252,8 @@ class Body:
 
 
 class Message:
-
     @staticmethod
-    def from_bytes(message_bytes: bytes, secret):
-        print("from_bytes", message_bytes)
-        message_bytes = int(message_bytes.decode("utf-8")) // secret
-        message_bytes = message_bytes.to_bytes((message_bytes.bit_length() + 7) // 8, 'little')
-        print("from_bytes", message_bytes)
+    def from_bytes(message_bytes: bytes):
         header = Header.from_bytes(message_bytes[:2])
         body = Body.from_bytes(message_bytes[2:], message_type=header.message_type)
         msg = Message(header, body)
@@ -269,15 +264,8 @@ class Message:
         self.header = header
         self.body = body
 
-    def to_bytes(self, secret) -> bytes:
+    def to_bytes(self) -> bytes:
         if self.header is None or self.body is None:
             raise ValueError("Header or body is None.")
 
-        mystring = self.header.to_bytes() + self.body.to_bytes(self.header.message_type)
-        print("to_bytes", mystring)
-        mybytes = mystring #.encode('utf-8')
-        myint = int.from_bytes(mybytes, 'little')
-
-        myint = myint * secret
-        print("to_bytes", bytes(str(myint), "utf-8"))
-        return bytes(str(myint), "utf-8")
+        return self.header.to_bytes() + self.body.to_bytes(self.header.message_type)

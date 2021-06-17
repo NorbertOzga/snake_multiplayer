@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="dca0d820-b0ca-4433-8362-0c165423a124" name="Default Changelist" comment="eencrypt/decrpt implementation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/client.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/client.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/server.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/venom.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/venom.py" afterDir="false" />
     </list>
@@ -84,69 +83,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1623322941530</updated>
-    </task>
-    <task id="LOCAL-00084" summary="zmiany">
-      <created>1623875616324</created>
-      <option name="number" value="00084" />
-      <option name="presentableId" value="LOCAL-00084" />
-      <option name="project" value="LOCAL" />
-      <updated>1623875616324</updated>
-    </task>
-    <task id="LOCAL-00085" summary="zmiany">
-      <created>1623875683500</created>
-      <option name="number" value="00085" />
-      <option name="presentableId" value="LOCAL-00085" />
-      <option name="project" value="LOCAL" />
-      <updated>1623875683500</updated>
-    </task>
-    <task id="LOCAL-00086" summary="zmiany">
-      <created>1623875908537</created>
-      <option name="number" value="00086" />
-      <option name="presentableId" value="LOCAL-00086" />
-      <option name="project" value="LOCAL" />
-      <updated>1623875908537</updated>
-    </task>
-    <task id="LOCAL-00087" summary="zmiany">
-      <created>1623875950942</created>
-      <option name="number" value="00087" />
-      <option name="presentableId" value="LOCAL-00087" />
-      <option name="project" value="LOCAL" />
-      <updated>1623875950942</updated>
-    </task>
-    <task id="LOCAL-00088" summary="zmiany">
-      <created>1623876001685</created>
-      <option name="number" value="00088" />
-      <option name="presentableId" value="LOCAL-00088" />
-      <option name="project" value="LOCAL" />
-      <updated>1623876001685</updated>
-    </task>
-    <task id="LOCAL-00089" summary="zmiany">
-      <created>1623876098327</created>
-      <option name="number" value="00089" />
-      <option name="presentableId" value="LOCAL-00089" />
-      <option name="project" value="LOCAL" />
-      <updated>1623876098327</updated>
-    </task>
-    <task id="LOCAL-00090" summary="zmiany">
-      <created>1623876198317</created>
-      <option name="number" value="00090" />
-      <option name="presentableId" value="LOCAL-00090" />
-      <option name="project" value="LOCAL" />
-      <updated>1623876198318</updated>
-    </task>
-    <task id="LOCAL-00091" summary="zmiany">
-      <created>1623877416976</created>
-      <option name="number" value="00091" />
-      <option name="presentableId" value="LOCAL-00091" />
-      <option name="project" value="LOCAL" />
-      <updated>1623877416976</updated>
-    </task>
-    <task id="LOCAL-00092" summary="zmiany">
-      <created>1623877492576</created>
-      <option name="number" value="00092" />
-      <option name="presentableId" value="LOCAL-00092" />
-      <option name="project" value="LOCAL" />
-      <updated>1623877492576</updated>
     </task>
     <task id="LOCAL-00093" summary="zmiany">
       <created>1623878836358</created>
@@ -428,7 +364,70 @@
       <option name="project" value="LOCAL" />
       <updated>1623936309328</updated>
     </task>
-    <option name="localTasksCounter" value="133" />
+    <task id="LOCAL-00133" summary="eencrypt/decrpt implementation">
+      <created>1623937448015</created>
+      <option name="number" value="00133" />
+      <option name="presentableId" value="LOCAL-00133" />
+      <option name="project" value="LOCAL" />
+      <updated>1623937448015</updated>
+    </task>
+    <task id="LOCAL-00134" summary="eencrypt/decrpt implementation">
+      <created>1623937709644</created>
+      <option name="number" value="00134" />
+      <option name="presentableId" value="LOCAL-00134" />
+      <option name="project" value="LOCAL" />
+      <updated>1623937709644</updated>
+    </task>
+    <task id="LOCAL-00135" summary="eencrypt/decrpt implementation">
+      <created>1623938121186</created>
+      <option name="number" value="00135" />
+      <option name="presentableId" value="LOCAL-00135" />
+      <option name="project" value="LOCAL" />
+      <updated>1623938121186</updated>
+    </task>
+    <task id="LOCAL-00136" summary="eencrypt/decrpt implementation">
+      <created>1623938178874</created>
+      <option name="number" value="00136" />
+      <option name="presentableId" value="LOCAL-00136" />
+      <option name="project" value="LOCAL" />
+      <updated>1623938178874</updated>
+    </task>
+    <task id="LOCAL-00137" summary="eencrypt/decrpt implementation">
+      <created>1623938291550</created>
+      <option name="number" value="00137" />
+      <option name="presentableId" value="LOCAL-00137" />
+      <option name="project" value="LOCAL" />
+      <updated>1623938291550</updated>
+    </task>
+    <task id="LOCAL-00138" summary="eencrypt/decrpt implementation">
+      <created>1623938375985</created>
+      <option name="number" value="00138" />
+      <option name="presentableId" value="LOCAL-00138" />
+      <option name="project" value="LOCAL" />
+      <updated>1623938375985</updated>
+    </task>
+    <task id="LOCAL-00139" summary="eencrypt/decrpt implementation">
+      <created>1623938475583</created>
+      <option name="number" value="00139" />
+      <option name="presentableId" value="LOCAL-00139" />
+      <option name="project" value="LOCAL" />
+      <updated>1623938475583</updated>
+    </task>
+    <task id="LOCAL-00140" summary="eencrypt/decrpt implementation">
+      <created>1623938796156</created>
+      <option name="number" value="00140" />
+      <option name="presentableId" value="LOCAL-00140" />
+      <option name="project" value="LOCAL" />
+      <updated>1623938796156</updated>
+    </task>
+    <task id="LOCAL-00141" summary="eencrypt/decrpt implementation">
+      <created>1623938848242</created>
+      <option name="number" value="00141" />
+      <option name="presentableId" value="LOCAL-00141" />
+      <option name="project" value="LOCAL" />
+      <updated>1623938848242</updated>
+    </task>
+    <option name="localTasksCounter" value="142" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
