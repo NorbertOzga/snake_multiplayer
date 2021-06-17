@@ -15,6 +15,7 @@ SERVER_ADDRESS = "20.86.147.135"
 SERVER_PORT = 10000
 MYNAME = ""
 
+
 # Points
 def drawPoints(player1_points, player2_points):
     # Clear HUD
