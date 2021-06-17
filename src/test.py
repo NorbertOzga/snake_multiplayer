@@ -1,6 +1,6 @@
 from mbedtls import tls
 
-from .mbedtls import tls
+from mbedtls import tls
 
 import datetime as dt
 from mbedtls import hashlib
