@@ -75,17 +75,11 @@ class UDPServer:
 
             data, client_address = self.sock.recvfrom(1024)
             # handle client's request
-            t = threading.Thread(target=self.handle_request, args=(data, client_address), daemon=True)
-            t.start()
-            #self.handle_request(data, client_address)
+
+            self.handle_request(data, client_address)
 
         except socket.timeout as e:
             pass
-
-    def run(self):
-
-        t = threading.Thread(target=self.check_games, args=(), daemon=True)
-        t.start()
 
     def shutdown_server(self):
         """ Shutdown the server """
@@ -354,6 +348,8 @@ class UDPServer:
     def check_games(self):
         now = time.time()
         print(now, "check_games")
+        for i in range(10000000):
+            i = i
         for game_id in self.queue.keys():
             recive_time, hosts = self.queue[game_id]
             if now - recive_time > 0.05:
@@ -383,10 +379,13 @@ def main():
     udp_server_multi_client = UDPServer('0.0.0.0', 10000)
     udp_server_multi_client.configure_server()
     while True:
-        udp_server_multi_client.wait_for_client()
-        udp_server_multi_client.run()
+        #udp_server_multi_client.wait_for_client()
+        #udp_server_multi_client.run()
         #udp_server_multi_client.check_games()
-
+        t1 = threading.Thread(target=udp_server_multi_client.wait_for_client, daemon=True)
+        t1.start()
+        t2 = threading.Thread(target=udp_server_multi_client.check_games, daemon=True)
+        t2.start()
 
 if __name__ == '__main__':
     main()
