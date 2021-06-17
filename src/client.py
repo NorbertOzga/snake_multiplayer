@@ -15,6 +15,7 @@ SERVER_ADDRESS = "20.86.147.135"
 SERVER_PORT = 10000
 MYNAME = ""
 
+SECRET = 1013
 
 # Points
 def drawPoints(player1_points, player2_points):
@@ -83,7 +84,7 @@ def composeMessage(message_type=None, nickname=None, user_id=None, \
     if d:
         body.data["move"] = d
     message = Message(header=header, body=body)
-    return message.to_bytes()
+    return message.to_bytes(SECRET)
 
 
 # Sending messages
@@ -96,7 +97,7 @@ def getMessage(returnNone=False):
     unpacked = None
     try:
         data, address = sock.recvfrom(1024)
-        unpacked = Message.from_bytes(data)
+        unpacked = Message.from_bytes(data, SECRET)
     except socket.timeout as e:
         if returnNone:
             return None

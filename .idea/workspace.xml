@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dca0d820-b0ca-4433-8362-0c165423a124" name="Default Changelist" comment="zmiany">
+    <list default="true" id="dca0d820-b0ca-4433-8362-0c165423a124" name="Default Changelist" comment="eencrypt/decrpt implementation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/client.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/client.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/server.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/venom.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/venom.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -82,13 +84,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1623322941530</updated>
-    </task>
-    <task id="LOCAL-00083" summary="zmiany">
-      <created>1623875481921</created>
-      <option name="number" value="00083" />
-      <option name="presentableId" value="LOCAL-00083" />
-      <option name="project" value="LOCAL" />
-      <updated>1623875481921</updated>
     </task>
     <task id="LOCAL-00084" summary="zmiany">
       <created>1623875616324</created>
@@ -426,7 +421,14 @@
       <option name="project" value="LOCAL" />
       <updated>1623924596177</updated>
     </task>
-    <option name="localTasksCounter" value="132" />
+    <task id="LOCAL-00132" summary="eencrypt/decrpt implementation">
+      <created>1623936309328</created>
+      <option name="number" value="00132" />
+      <option name="presentableId" value="LOCAL-00132" />
+      <option name="project" value="LOCAL" />
+      <updated>1623936309328</updated>
+    </task>
+    <option name="localTasksCounter" value="133" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -462,6 +464,7 @@
     <MESSAGE value="change receiving data" />
     <MESSAGE value="commit" />
     <MESSAGE value="zmiany" />
-    <option name="LAST_COMMIT_MESSAGE" value="zmiany" />
+    <MESSAGE value="eencrypt/decrpt implementation" />
+    <option name="LAST_COMMIT_MESSAGE" value="eencrypt/decrpt implementation" />
   </component>
 </project>

@@ -10,6 +10,7 @@ class UDPServer:
     users = {}  # "IP": "user ID"
     game_shape = (25, 25)
     queue = {}
+    secret = {}
 
     def __init__(self, host, port):
         self.host = host
@@ -40,20 +41,20 @@ class UDPServer:
         ''' Handle the client '''
         # handle request
 
-        req = Message.from_bytes(data)
+        req = Message.from_bytes(data, self.secret[client_address])
         self.printwt(f'[ REQUEST from {client_address} ]')
         print('\n', req, '\n')
 
         if req.header.message_type == MessageType.LOGIN_CLIENT:
-            resp = self.register_user(req.body.data)
+            resp = self.register_user(req.body.data, client_address)
         elif req.header.message_type == MessageType.LIST_GAMES_CLIENT:
-            resp = self.list_games(req.body.data)
+            resp = self.list_games(req.body.data, client_address)
         elif req.header.message_type == MessageType.CREATE_GAME_CLIENT:
-            resp = self.create_game(req.body.data)
+            resp = self.create_game(req.body.data, client_address)
         elif req.header.message_type == MessageType.JOIN_GAME_CLIENT:
             resp = self.join_game(req.body.data, client_address)
         elif req.header.message_type == MessageType.EXIT_GAME_CLIENT:
-            resp = self.exit_game(req.body.data)
+            resp = self.exit_game(req.body.data, client_address)
         elif req.header.message_type == MessageType.SEND_MOVE:
             self.store_move(req.body.data)
             return
@@ -74,6 +75,10 @@ class UDPServer:
 
             data, client_address = self.sock.recvfrom(1024)
             # handle client's request
+            try:
+                self.secret[client_address]
+            except KeyError:
+                self.secret[client_address] = 1013
 
             self.handle_request(data, client_address)
 
@@ -86,7 +91,7 @@ class UDPServer:
         self.printwt('Shutting down server...')
         self.sock.close()
 
-    def register_user(self, data):
+    def register_user(self, data,client_address):
         nickname = data["nickname"]
         if nickname not in self.users.values():
             user_id = self.get_new_user_id()
@@ -97,21 +102,21 @@ class UDPServer:
                 body.data["operation_success"] = b'\x20'
                 body.data["user_id"] = user_id
                 message = Message(header=header, body=body)
-                return message.to_bytes()
+                return message.to_bytes(self.secret[client_address])
 
         body = Body()
         header = Header(sender=0, message_type=MessageType.LOGIN_SERVER)
         body.data["operation_success"] = b'\x50'
         message = Message(header=header, body=body)
-        return message.to_bytes()
+        return message.to_bytes(self.secret[client_address])
 
-    def list_games(self, data):
+    def list_games(self, data, client_address):
         if data["user_id"] not in self.users.keys():
             body = Body()
             header = Header(sender=0, message_type=MessageType.LIST_GAMES_SERVER)
             body.data["operation_success"] = b'\x50'
             message = Message(header=header, body=body)
-            return message.to_bytes()
+            return message.to_bytes(self.secret[client_address])
 
         game_info_list = []
 
@@ -125,7 +130,7 @@ class UDPServer:
         body.data["operation_success"] = b'\x20'
         body.data["games"] = game_info_list
         message = Message(header=header, body=body)
-        return message.to_bytes()
+        return message.to_bytes(1013)
 
     def join_game(self, data, client_address):
         game_id = data["game_id"]
@@ -151,15 +156,15 @@ class UDPServer:
             body.data["operation_success"] = b'\x20'
             body.data["is_player_1"] = is_player_1
             message = Message(header=header, body=body)
-            return message.to_bytes()
+            return message.to_bytes(self.secret[client_address])
         else:
             header = Header(sender=0, message_type=MessageType.JOIN_GAME_SERVER)
             body = Body()
             body.data["operation_success"] = b'\x50'
             message = Message(header=header, body=body)
-            return message.to_bytes()
+            return message.to_bytes(self.secret[client_address])
 
-    def exit_game(self, data):
+    def exit_game(self, data, client_address):
         game_id = data["game_id"]
 
         if self.games[game_id]["player_1"] == data["user_id"]:
@@ -173,9 +178,9 @@ class UDPServer:
         body = Body()
         body.data["operation_success"] = b'\x20'
         message = Message(header=header, body=body)
-        return message.to_bytes()
+        return message.to_bytes(self.secret[client_address])
 
-    def game_state(self, game_id):
+    def game_state(self, game_id, client_address):
         if game_id in self.games.keys():
             header = Header(sender=0, message_type=MessageType.SEND_STATE)
             body = Body()
@@ -192,13 +197,13 @@ class UDPServer:
             body.data["p1_over"] = self.games[game_id]["p1_over"]
             body.data["p2_over"] = self.games[game_id]["p2_over"]
             message = Message(header=header, body=body)
-            return message.to_bytes()
+            return message.to_bytes(self.secret[client_address])
         else:
             header = Header(sender=0, message_type=MessageType.SEND_STATE)
             body = Body()
             body.data["operation_success"] = b'\x50'
             message = Message(header=header, body=body)
-            return message.to_bytes()
+            return message.to_bytes(self.secret[client_address])
 
     def check_gameover(self, game_id):
         if self.games[game_id]["players_num"] == 2 and self.games[game_id]["p1_over"] and self.games[game_id]["p2_over"]:
@@ -207,7 +212,7 @@ class UDPServer:
             return True
         return False
 
-    def create_game(self, data):
+    def create_game(self, data, client_address):
         game_id = self.get_new_game_id()
         if game_id != -1:
             self.games[game_id] = {
@@ -230,14 +235,14 @@ class UDPServer:
             body.data["operation_success"] = b'\x20'
             body.data["game_id"] = game_id
             message = Message(header=header, body=body)
-            return message.to_bytes()
+            return message.to_bytes(self.secret[client_address])
 
         else:
             header = Header(sender=0, message_type=MessageType.CREATE_GAME_SERVER)
             body = Body()
             body.data["operation_success"] = b'\x50'
             message = Message(header=header, body=body)
-            return message.to_bytes()
+            return message.to_bytes(self.secret[client_address])
 
     def get_new_game_id(self):
         games_ids = self.games.keys()
@@ -351,9 +356,9 @@ class UDPServer:
             recive_time, hosts = self.queue[game_id]
             if now - recive_time > 0.2:
                 self.process_game(game_id)
-                resp = self.game_state(game_id)
 
                 for host in hosts:
+                    resp = self.game_state(game_id, host)
                     self.sock.sendto(resp, host)
                 try:
                     self.queue[game_id][0] = time.time()
