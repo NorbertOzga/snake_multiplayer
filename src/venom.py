@@ -257,7 +257,7 @@ class Message:
     def from_bytes(message_bytes: bytes, secret):
         message_bytes = int(message_bytes.decode("utf-8")) // secret
         message_bytes = message_bytes.to_bytes((message_bytes.bit_length() + 7) // 8, 'little')
-
+        print(message_bytes)
         header = Header.from_bytes(message_bytes[:2])
         body = Body.from_bytes(message_bytes[2:], message_type=header.message_type)
         msg = Message(header, body)
@@ -271,8 +271,7 @@ class Message:
     def to_bytes(self, secret) -> bytes:
         if self.header is None or self.body is None:
             raise ValueError("Header or body is None.")
-        print(self.header.to_bytes())
-        print(self.body.to_bytes(self.header.message_type).decode())
+
         mystring = self.header.to_bytes() + self.body.to_bytes(self.header.message_type)
         mybytes = mystring #.encode('utf-8')
         myint = int.from_bytes(mybytes, 'little')
