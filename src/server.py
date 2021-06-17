@@ -41,9 +41,6 @@ class UDPServer:
         self.sock.bind((self.host, self.port))
         self.sock.settimeout(0.2)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.sock.listen(10)
-
-
 
         self.printwt(f'Server binded to {self.host}:{self.port}')
 
