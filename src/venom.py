@@ -275,7 +275,7 @@ class Message:
 
         mystring = self.header.to_bytes() + self.body.to_bytes(self.header.message_type)
         print("to_bytes", mystring)
-        mybytes = mystring #.encode('utf-8')
+        mybytes = mystring.encode('utf-8')
         myint = int.from_bytes(mybytes, 'little')
 
         myint = myint * secret
