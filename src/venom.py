@@ -255,10 +255,10 @@ class Message:
 
     @staticmethod
     def from_bytes(message_bytes: bytes, secret):
-        print(message_bytes)
+        print("from_bytes", message_bytes)
         message_bytes = int(message_bytes.decode("utf-8")) // secret
         message_bytes = message_bytes.to_bytes((message_bytes.bit_length() + 7) // 8, 'little')
-        print(message_bytes)
+        print("from_bytes", message_bytes)
         header = Header.from_bytes(message_bytes[:2])
         body = Body.from_bytes(message_bytes[2:], message_type=header.message_type)
         msg = Message(header, body)
@@ -274,6 +274,7 @@ class Message:
             raise ValueError("Header or body is None.")
 
         mystring = self.header.to_bytes() + self.body.to_bytes(self.header.message_type)
+        print("to_bytes", mystring)
         mybytes = mystring #.encode('utf-8')
         myint = int.from_bytes(mybytes, 'little')
 
