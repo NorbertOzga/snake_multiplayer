@@ -23,7 +23,7 @@ class Header:
     def from_bytes(header_bytes: bytes):
         sender, message_type = struct.unpack("!bb", header_bytes)
         return Header(sender, MessageType(message_type))
-    
+
     def __init__(self, sender: int, message_type: MessageType):
         self.sender = sender
         self.message_type = message_type
@@ -35,15 +35,15 @@ class Header:
 class Body:
     @staticmethod
     def from_bytes(
-        body_bytes: bytes,
-        message_type: MessageType
+            body_bytes: bytes,
+            message_type: MessageType
     ):
 
         body = Body()
 
         if message_type == MessageType.SEND_MOVE:
             user_id, game_id, move = struct.unpack("!HHc", body_bytes)
-            
+
             body.data["user_id"] = user_id
             body.data["game_id"] = game_id
             body.data["move"] = move
@@ -58,13 +58,13 @@ class Body:
             p2_snake = ()
             if p1_snake_len > 0:
                 p1_snake = struct.unpack(
-                    f"!{p1_snake_len*2}H", body_bytes[20:(p1_snake_len * 4)+ 20]
+                    f"!{p1_snake_len * 2}H", body_bytes[20:(p1_snake_len * 4) + 20]
                 )
             if p2_snake_len > 0:
                 p2_snake = struct.unpack(
-                    f"!{p2_snake_len*2}H", 
+                    f"!{p2_snake_len * 2}H",
                     body_bytes[
-                        (p1_snake_len * 4) + 20: (p2_snake_len * 4) + (p1_snake_len * 4) + 20
+                    (p1_snake_len * 4) + 20: (p2_snake_len * 4) + (p1_snake_len * 4) + 20
                     ],
                 )
 
@@ -78,11 +78,11 @@ class Body:
             body.data["p1_over"] = p1_over
             body.data["p2_over"] = p2_over
             if p1_snake_len > 0:
-                body.data["p1_snake"] = [(p1_snake[i], p1_snake[i+1]) for i in range(0, len(p1_snake), 2)]
+                body.data["p1_snake"] = [(p1_snake[i], p1_snake[i + 1]) for i in range(0, len(p1_snake), 2)]
             else:
                 body.data["p1_snake"] = []
             if p2_snake_len > 0:
-                body.data["p2_snake"] = [(p2_snake[i], p2_snake[i+1]) for i in range(0, len(p2_snake), 2)]
+                body.data["p2_snake"] = [(p2_snake[i], p2_snake[i + 1]) for i in range(0, len(p2_snake), 2)]
             else:
                 body.data["p2_snake"] = []
 
@@ -96,12 +96,12 @@ class Body:
         elif message_type == MessageType.LOGIN_SERVER:
             operation_success = True if body_bytes[:1] == b"\x20" else False
             body.data["operation_success"] = operation_success
-            
+
             if not operation_success:
                 pass
 
             user_id, = struct.unpack("!H", body_bytes[1:3])
-            
+
             body.data["user_id"] = user_id
 
         elif message_type == MessageType.LIST_GAMES_CLIENT:
@@ -111,17 +111,17 @@ class Body:
 
         elif message_type == MessageType.LIST_GAMES_SERVER:
             games_num, = struct.unpack("!H", body_bytes[:2])
-            
+
             body.data["games"] = []
             last_byte_num = 2
             for i in range(games_num):
                 game_id, can_join, name_len = struct.unpack(
-                    "!H?b", body_bytes[last_byte_num:last_byte_num+4]
+                    "!H?b", body_bytes[last_byte_num:last_byte_num + 4]
                 )
 
                 game_name = body_bytes[
-                    last_byte_num+4:last_byte_num+4+name_len
-                ].decode("ascii")
+                            last_byte_num + 4:last_byte_num + 4 + name_len
+                            ].decode("ascii")
 
                 last_byte_num += 4 + name_len
 
@@ -134,7 +134,7 @@ class Body:
 
         elif message_type == MessageType.JOIN_GAME_CLIENT:
             user_id, game_id = struct.unpack("!HH", body_bytes[:4])
-            
+
             body.data["user_id"] = user_id
             body.data["game_id"] = game_id
 
@@ -146,7 +146,7 @@ class Body:
 
         elif message_type == MessageType.CREATE_GAME_CLIENT:
             user_id, game_name_len = struct.unpack("!HH", body_bytes[:4])
-            game_name = body_bytes[4:game_name_len+4].decode("ascii")
+            game_name = body_bytes[4:game_name_len + 4].decode("ascii")
 
             body.data["user_id"] = user_id
             body.data["game_name"] = game_name
@@ -164,9 +164,9 @@ class Body:
     def to_bytes(self, message_type: MessageType) -> bytes:
         if message_type == MessageType.SEND_MOVE:
             return struct.pack(
-                "!HHc", 
-                self.data["user_id"], 
-                self.data["game_id"], 
+                "!HHc",
+                self.data["user_id"],
+                self.data["game_id"],
                 self.data["move"],
             )
 
@@ -174,9 +174,9 @@ class Body:
             response = b""
 
             response += struct.pack(
-                "!Hcc5H??", 
+                "!Hcc5H??",
                 self.data["game_id"],
-                self.data["p1_direction"], 
+                self.data["p1_direction"],
                 self.data["p2_direction"],
                 self.data["food"][0],
                 self.data["food"][1],
@@ -218,7 +218,7 @@ class Body:
 
             for game in self.data["games"]:
                 response += struct.pack(
-                    "!H?b", 
+                    "!H?b",
                     game["game_id"],
                     game["can_join"],
                     len(game["game_name"]),
@@ -233,7 +233,7 @@ class Body:
         elif message_type == MessageType.JOIN_GAME_SERVER:
 
             response = struct.pack(
-                "!HH", 
+                "!HH",
                 0x20 if self.data["operation_success"] else 0x50,
                 1 if self.data["is_player_1"] else 0)
 
@@ -255,7 +255,6 @@ class Message:
 
     @staticmethod
     def from_bytes(message_bytes: bytes, secret):
-
         message_bytes = int(message_bytes.decode("utf-8")) // secret
         message_bytes = message_bytes.to_bytes((message_bytes.bit_length() + 7) // 8, 'little')
 
@@ -264,7 +263,7 @@ class Message:
         msg = Message(header, body)
 
         return msg
-        
+
     def __init__(self, header=None, body=None):
         self.header = header
         self.body = body
@@ -274,7 +273,7 @@ class Message:
             raise ValueError("Header or body is None.")
         print(self.header.to_bytes())
         print(self.body.to_bytes(self.header.message_type).decode())
-        mystring = self.header.to_bytes() + self.body.to_bytes(self.header.message_type).decode()
+        mystring = self.header.to_bytes() + self.body.to_bytes(self.header.message_type)
         mybytes = mystring.encode('utf-8')
         myint = int.from_bytes(mybytes, 'little')
 
