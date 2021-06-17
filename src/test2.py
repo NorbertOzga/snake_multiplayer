@@ -61,4 +61,3 @@ block(dtls_cli.do_handshake)
 DATAGRAM = b"hello datagram"
 block(dtls_cli.send, DATAGRAM)
 block(dtls_cli.recv, 4096)
-b'hello datagram'
