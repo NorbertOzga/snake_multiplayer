@@ -47,11 +47,6 @@ dtls_srv_ctx = tls.ServerContext(tls.DTLSConfiguration(
      validate_certificates=False,
 ))
 
-dtls_cli_ctx = tls.ClientContext(tls.DTLSConfiguration(
-     trust_store=trust_store,
-     validate_certificates=True,
-))
-
 dtls_srv = dtls_srv_ctx.wrap_socket(
     socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 )
