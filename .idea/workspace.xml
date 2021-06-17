@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dca0d820-b0ca-4433-8362-0c165423a124" name="Default Changelist" comment="zmiany">
-      <change beforePath="$PROJECT_DIR$/src/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test2.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/venom.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/venom.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,13 +82,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1623322941530</updated>
-    </task>
-    <task id="LOCAL-00082" summary="zmiany">
-      <created>1623875339809</created>
-      <option name="number" value="00082" />
-      <option name="presentableId" value="LOCAL-00082" />
-      <option name="project" value="LOCAL" />
-      <updated>1623875339809</updated>
     </task>
     <task id="LOCAL-00083" summary="zmiany">
       <created>1623875481921</created>
@@ -426,7 +419,14 @@
       <option name="project" value="LOCAL" />
       <updated>1623924472292</updated>
     </task>
-    <option name="localTasksCounter" value="131" />
+    <task id="LOCAL-00131" summary="zmiany">
+      <created>1623924596177</created>
+      <option name="number" value="00131" />
+      <option name="presentableId" value="LOCAL-00131" />
+      <option name="project" value="LOCAL" />
+      <updated>1623924596177</updated>
+    </task>
+    <option name="localTasksCounter" value="132" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

@@ -18,9 +18,12 @@ class MessageType(Enum):
     UNKNOWN = 0x0d
 
 
+secret = 1013
 class Header:
     @staticmethod
     def from_bytes(header_bytes: bytes):
+        header_bytes = int(header_bytes.decode()) // secret
+        header_bytes = header_bytes.to_bytes((header_bytes.bit_length() + 7) // 8, 'little')
         sender, message_type = struct.unpack("!bb", header_bytes)
         return Header(sender, MessageType(message_type))
     
@@ -38,7 +41,8 @@ class Body:
         body_bytes: bytes,
         message_type: MessageType
     ):
-        
+        body_bytes = int(body_bytes.decode()) // secret
+        body_bytes = body_bytes.to_bytes((body_bytes.bit_length() + 7) // 8, 'little')
         body = Body()
 
         if message_type == MessageType.SEND_MOVE:
@@ -268,4 +272,8 @@ class Message:
         if self.header is None or self.body is None:
             raise ValueError("Header or body is None.")
 
-        return self.header.to_bytes() + self.body.to_bytes(self.header.message_type)
+        mystring = self.header.to_bytes() + self.body.to_bytes(self.header.message_type).decode()
+        mybytes = mystring.encode('utf-8')
+        myint = int.from_bytes(mybytes, 'little')
+        myint = myint * secret
+        return bytes(str(myint), "utf-8")
