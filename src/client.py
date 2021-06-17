@@ -15,7 +15,7 @@ import os
 def create_key():
     os.system('''openssl req -new -x509 -days 365 -nodes -out client.pem -keyout client.key -subj "/C=PL/ST=Lublin/L=Lublin/O=PAS-Snake/OU=IT Department/CN=SNAKE" ''')
 
-if not os.path.exists("server.pem") or not os.path.exists("server.key"):
+if not os.path.exists("client.pem") or not os.path.exists("client.key"):
     create_key()
 
 # Server and its address configuration
