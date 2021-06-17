@@ -293,3 +293,5 @@ while True:
             except:
                 print("error")
             last_update = time.time()
+
+print("Przegrana! Punkty:",input["pt1"])
