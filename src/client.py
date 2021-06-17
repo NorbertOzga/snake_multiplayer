@@ -294,4 +294,7 @@ while True:
                 print("error")
             last_update = time.time()
 
-print("Przegrana! Punkty:",input["pt1"])
+if is_player_1:
+	print("Przegrana! Punkty:",input["pt1"])
+else:
+	print("Przegrana! Punkty:",input["pt2"])
