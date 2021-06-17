@@ -348,8 +348,8 @@ class UDPServer:
     def check_games(self):
         now = time.time()
         print(now, "check_games")
-        for i in range(10000000):
-            i = i
+        for i in range(1000000000):
+            a = i**4
         for game_id in self.queue.keys():
             recive_time, hosts = self.queue[game_id]
             if now - recive_time > 0.05:
