@@ -202,3 +202,94 @@ FramePerSec = pygame.time.Clock()
 SIZE_X = 25
 SIZE_Y = 25
 POINT_SIZE = 24
+
+# Colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+P1_C = (127, 255, 127)
+P2_C = (127, 127, 255)
+FOOD_COLOR = (255, 127, 0)
+
+# Creating window
+DISPLAY = pygame.display.set_mode((SIZE_X * POINT_SIZE, SIZE_Y * POINT_SIZE + 16))
+DISPLAY.fill(WHITE)
+pygame.display.set_caption("Snake Client")
+
+# Fonts configuration
+font = pygame.font.SysFont("Courier", 12)
+
+# Adding HUD
+pygame.draw.rect(DISPLAY, (0, 0, 0), (0, SIZE_Y * POINT_SIZE, SIZE_X * POINT_SIZE, SIZE_Y * POINT_SIZE + 16))
+PLAYER1 = font.render("Player 1: ", True, P1_C)
+DISPLAY.blit(PLAYER1, (2, SIZE_Y * POINT_SIZE + 2))
+PLAYER2 = font.render("Player 2: ", True, P2_C)
+DISPLAY.blit(PLAYER2, (2 + (SIZE_X * POINT_SIZE) / 2, SIZE_Y * POINT_SIZE + 2))
+
+# Main game loop
+last_key = "r"
+last_update = time.time()
+
+
+def check_last_pressed_key(last_key):
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                return "l"
+            elif event.key == pygame.K_RIGHT:
+                return "r"
+            elif event.key == pygame.K_UP:
+                return "u"
+            elif event.key == pygame.K_DOWN:
+                return "d"
+    return last_key
+
+
+last_last_key = ""
+
+while True:
+    now = time.time()
+    last_key = check_last_pressed_key(last_key)
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sock.close()
+            sys.exit()
+    if last_key != last_last_key:
+        out = composeMessage(MessageType.SEND_MOVE, user_id=USER_ID, game_id=GAME_ID, d=last_key.encode())
+        # print("out", out)
+        sendMessage(out)
+        last_last_key = last_key
+    pygame.display.update()
+    FramePerSec.tick(FPS)
+    # print("GAME")
+    last_key = check_last_pressed_key(last_key)
+    inp = getMessage(True)
+    try:
+        # print(data.decode('utf-8'))
+        # input = eval(data.decode('utf-8'))["game_state"]
+        input = inp.body.data
+    except:
+        input = lastData
+    last_key = check_last_pressed_key(last_key)
+    # print(input)
+    if True:
+        if input != None:
+            if lastData != None:
+                generateSnake(lastData["p1_snake"], WHITE)
+                generateSnake(lastData["p2_snake"], WHITE)
+                drawFood(lastData["food"][0], lastData["food"][1], WHITE)
+                lastData = input
+            else:
+                lastData = input
+            generateSnake(input["p1_snake"], P1_C)
+            generateSnake(input["p2_snake"], P2_C)
+            drawFood(input["food"][0], input["food"][1], FOOD_COLOR)
+            drawPoints(input["pt1"], input["pt2"])
+            try:
+                if is_player_1 and input['p1_over'] == 1:
+                    break
+                if not is_player_1 and input['p2_over'] == 1:
+                    break
+            except:
+                print("error")
+            last_update = time.time()

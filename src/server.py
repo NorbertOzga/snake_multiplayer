@@ -3,6 +3,7 @@ from datetime import datetime
 import random
 import time
 from venom import *
+import threading
 
 class UDPServer:
     games = {}  # list of current games
@@ -375,9 +376,12 @@ def main():
     udp_server_multi_client = UDPServer('0.0.0.0', 10000)
     udp_server_multi_client.configure_server()
     while True:
-        udp_server_multi_client.wait_for_client()
-        udp_server_multi_client.check_games()
-
+        #udp_server_multi_client.wait_for_client()
+        #udp_server_multi_client.check_games()
+        t1 = threading.Thread(target=udp_server_multi_client.wait_for_client, daemon=True)
+        t1.start()
+        t2 = threading.Thread(target=udp_server_multi_client.check_games, daemon=True)
+        t2.start()
 
 if __name__ == '__main__':
     main()
