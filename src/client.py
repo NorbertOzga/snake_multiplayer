@@ -9,6 +9,14 @@ import json
 import time
 import errno
 from venom import *
+import ssl
+import os
+
+def create_key():
+    os.system('''openssl req -new -x509 -days 365 -nodes -out client.pem -keyout client.key -subj "/C=PL/ST=Lublin/L=Lublin/O=PAS-Snake/OU=IT Department/CN=SNAKE" ''')
+
+if not os.path.exists("server.pem") or not os.path.exists("server.key"):
+    create_key()
 
 # Server and its address configuration
 SERVER_ADDRESS=	"20.86.147.135"
@@ -35,9 +43,28 @@ def drawPoints(player1_points, player2_points):
 	DISPLAY.blit(P2_PT,(74+(SIZE_X*POINT_SIZE)/2,SIZE_Y*POINT_SIZE+2))
 
 # Connecting
+SERVER=(SERVER_ADDRESS,SERVER_PORT)
 sock=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.settimeout(0.1)
-SERVER=(SERVER_ADDRESS,SERVER_PORT)
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.setblocking(1)
+
+context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+context.verify_mode = ssl.CERT_REQUIRED
+context.load_verify_locations('server.pem')
+context.load_cert_chain(certfile="client.pem", keyfile="client.key")
+
+if ssl.HAS_SNI:
+	secure_sock = context.wrap_socket(sock, server_side=False, server_hostname=SERVER[0])
+else:
+	secure_sock = context.wrap_socket(sock, server_side=False)
+
+cert = secure_sock.getpeercert()
+
+# verify server
+if not cert or ('commonName', 'SNAKE') not in cert['subject'][5]: raise Exception("ERROR")
+
+
 
 # Draw initial points
 # drawPoints(0,0)
@@ -80,13 +107,13 @@ def composeMessage(message_type=None, nickname=None, user_id=None, \
 
 # Sending messages
 def sendMessage(message):
-	sock.sendto(message,SERVER)
+	secure_sock.sendto(message,SERVER)
 
 # Properly getting messages
 def getMessage(returnNone=False):
 	unpacked=None
 	try:
-		data,address=sock.recvfrom(1024)
+		data,address=secure_sock.recvfrom(1024)
 		unpacked=Message.from_bytes(data)
 	except socket.timeout as e:
 		if returnNone:
@@ -238,7 +265,7 @@ while True:
 	for event in pygame.event.get():
 		if event.type==QUIT:
 			pygame.quit()
-			sock.close()
+			secure_sock.close()
 			sys.exit()
 	if last_key != last_last_key:
 		out = composeMessage(MessageType.SEND_MOVE, user_id=USER_ID, game_id=GAME_ID, d=last_key.encode())
@@ -279,3 +306,7 @@ while True:
 			except:
 				print("error")
 			last_update = time.time()
+
+
+secure_sock.close()
+sock.close()
