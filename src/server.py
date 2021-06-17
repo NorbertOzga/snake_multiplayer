@@ -75,7 +75,7 @@ class UDPServer:
 
             data, client_address = self.sock.recvfrom(1024)
             # handle client's request
-            t = threading.Thread(target=self.handle_request, args=(data, client_address))
+            t = threading.Thread(target=self.handle_request, args=(data, client_address), daemon=True)
             t.start()
             #self.handle_request(data, client_address)
 
@@ -83,7 +83,8 @@ class UDPServer:
             pass
 
     def run(self):
-        t = threading.Thread(target=self.check_games, args=())
+
+        t = threading.Thread(target=self.check_games, args=(), daemon=True)
         t.start()
 
     def shutdown_server(self):
