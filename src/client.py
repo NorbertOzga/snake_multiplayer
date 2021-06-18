@@ -37,10 +37,9 @@ def drawPoints(player1_points, player2_points):
 
 
 # Connecting
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.settimeout(0.1)
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 SERVER = (SERVER_ADDRESS, SERVER_PORT)
-
+sock.connect(SERVER)
 
 # Draw initial points
 # drawPoints(0,0)
@@ -88,14 +87,14 @@ def composeMessage(message_type=None, nickname=None, user_id=None, \
 
 # Sending messages
 def sendMessage(message):
-    sock.sendto(message, SERVER)
+    sock.send(message)
 
 
 # Properly getting messages
 def getMessage(returnNone=False):
     unpacked = None
     try:
-        data, address = sock.recvfrom(1024)
+        data, address = sock.recv(1024)
         unpacked = Message.from_bytes(data)
     except socket.timeout as e:
         if returnNone:

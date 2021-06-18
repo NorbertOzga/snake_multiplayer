@@ -1,3 +1,4 @@
+import asyncio
 import socket
 from datetime import datetime
 import random
@@ -5,16 +6,16 @@ import time
 from venom import *
 import threading
 
-class UDPServer:
-    games = {}  # list of current games
-    users = {}  # "IP": "user ID"
-    game_shape = (25, 25)
-    queue = {}
+games = {}  # list of current games
+users = {}  # "IP": "user ID"
+queue = {}
 
-    def __init__(self, host, port):
-        self.host = host
-        self.port = port
-        self.sock = None  # Connection socket
+
+class UDPServer(asyncio.Protocol):
+    games = games  # list of current games
+    users = users  # "IP": "user ID"
+    game_shape = (25, 25)
+    queue = queue
 
     def printwt(self, msg):
         ''' Print message with current date and time '''
@@ -26,14 +27,15 @@ class UDPServer:
         ''' Configure the server '''
         # create UDP socket with IPv4 addressingchek
 
-        self.printwt('Creating socket...')
-        self.printwt('Socket created')
-        # bind server to the address
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.printwt(f'Binding server to {self.host}:{self.port}...')
-        self.sock.bind((self.host, self.port))
-        self.sock.settimeout(0.2)
-        self.printwt(f'Server binded to {self.host}:{self.port}')
+    def connection_made(self, transport):
+        """ Called on instantiation, when new client connects """
+        self.transport = transport
+        self.client_address = transport.get_extra_info('peername')
+
+    def data_received(self, data):
+        """ Handle data as it's received. Broadcast complete
+        messages to all other clients """
+        self.handle_request(data, self.client_address)
 
     def handle_request(self, data, client_address):
 
@@ -65,26 +67,13 @@ class UDPServer:
         # send response to the client
 
         self.printwt(f'[ RESPONSE to {client_address} ]')
-        self.sock.sendto(resp, client_address)
+        self.transport.write(resp)
 
-    def wait_for_client(self):
-        """ Wait for a client """
-        try:
-            # receive message from a client
 
-            data, client_address = self.sock.recvfrom(1024)
-            # handle client's request
-
-            self.handle_request(data, client_address)
-
-        except socket.timeout as e:
-            pass
-
-    def shutdown_server(self):
-        """ Shutdown the server """
-
-        self.printwt('Shutting down server...')
-        self.sock.close()
+    def connection_lost(self, ex):
+        """ Called on client disconnect. Clean up client state """
+        print('Client {} disconnected'.format(self.addr))
+        # TODO exit game
 
     def register_user(self, data):
         nickname = data["nickname"]
@@ -378,16 +367,19 @@ class UDPServer:
 
 def main():
     """ Create a UDP Server and handle multiple clients simultaneously """
+    loop = asyncio.get_event_loop()
 
-    udp_server_multi_client = UDPServer('0.0.0.0', 10000)
-    udp_server_multi_client.configure_server()
-    while True:
-        udp_server_multi_client.wait_for_client()
-        udp_server_multi_client.check_games()
-        #t1 = threading.Thread(target=udp_server_multi_client.wait_for_client, daemon=True)
-        #t1.start()
-        #t2 = threading.Thread(target=udp_server_multi_client.check_games, daemon=True)
-        #t2.start()
+    # Create server and initialize on the event loop
+    coroutine = loop.create_server(UDPServer, host='0.0.0.0', port=10000)
+    server = loop.run_until_complete(coroutine)
+
+    # print listening socket info
+    for socket in server.sockets:
+        addr = socket.getsockname()
+        print('Listening on {}'.format(addr))
+    # Run the loop to process client connections
+    loop.run_forever()
+
 
 if __name__ == '__main__':
     main()
