@@ -35,7 +35,7 @@ class UDPServer:
         self.sock.listen(1)
         self.printwt(f'Server binded to {self.host}:{self.port}')
 
-    def handle_request(self, data, client_address):
+    def handle_request(self, data, client_address, sock):
 
         ''' Handle the client '''
         # handle request
@@ -65,7 +65,7 @@ class UDPServer:
         # send response to the client
 
         self.printwt(f'[ RESPONSE to {client_address} ]')
-        self.sock.sendto(resp, client_address)
+        sock.sendall(resp)
 
     def wait_for_client(self, sock, client_address):
         """ Wait for a client """
@@ -75,7 +75,7 @@ class UDPServer:
             data = sock.recv(1024)
             # handle client's request
 
-            self.handle_request(data, client_address)
+            self.handle_request(data, client_address, sock)
 
         except socket.timeout as e:
             pass
