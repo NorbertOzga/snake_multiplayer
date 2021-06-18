@@ -243,7 +243,7 @@ def check_last_pressed_key(last_key):
                 return "u"
             elif event.key == pygame.K_DOWN:
                 return "d"
-			elif event.key == pygame.K_ESC:
+			elif event.key == pygame.K_ESCAPE:
 				endGame=True
     return last_key
 
