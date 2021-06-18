@@ -156,6 +156,17 @@ class Body:
 
             body.data["game_id"] = game_id
 
+        elif message_type == MessageType.EXIT_GAME_CLIENT:
+            user_id, game_id = struct.unpack("!HH", body_bytes)
+
+            body.data["user_id"] = user_id
+            body.data["game_id"] = game_id
+
+        elif message_type == MessageType.EXIT_GAME_SERVER:
+            operation_success = struct.unpack("!H", body_bytes)
+
+            body.data["operation_success"] = True if operation_success == 0x20 else False
+
         return body
 
     def __init__(self):
@@ -247,6 +258,16 @@ class Body:
 
         elif message_type == MessageType.CREATE_GAME_SERVER:
             response = struct.pack("!H", self.data["game_id"])
+
+            return response
+        
+        elif message_type == MessageType.EXIT_GAME_CLIENT:
+            response = struct.pack("!HH", self.data["user_id"], self.data["game_id"])
+
+            return response
+
+        elif message_type == MessageType.EXIT_GAME_SERVER:
+            response = struct.pack("!H", 0x20 if self.data["operation_success"] else 0x50)
 
             return response
 
