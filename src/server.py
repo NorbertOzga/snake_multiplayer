@@ -355,6 +355,7 @@ class UDPServer:
         return False, False, food
 
     def check_games(self):
+        print("check_games")
         now = time.time()
         for game_id in self.queue.keys():
             recive_time, hosts = self.queue[game_id]
