@@ -171,7 +171,7 @@ class UDPServer:
 
         header = Header(sender=0, message_type=MessageType.EXIT_GAME_SERVER)
         body = Body()
-        body.data["operation_success"] = b'\x20'
+        body.data["operation_success"] = True
         message = Message(header=header, body=body)
         return message.to_bytes()
 
