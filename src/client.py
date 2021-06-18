@@ -264,11 +264,11 @@ while True:
             pygame.quit()
             sock.close()
             sys.exit()
-    if last_key != last_last_key:
-        out = composeMessage(MessageType.SEND_MOVE, user_id=USER_ID, game_id=GAME_ID, d=last_key.encode())
-        # print("out", out)
-        sendMessage(out)
-        last_last_key = last_key
+    #if last_key != last_last_key:
+    out = composeMessage(MessageType.SEND_MOVE, user_id=USER_ID, game_id=GAME_ID, d=last_key.encode())
+    # print("out", out)
+    sendMessage(out)
+        #last_last_key = last_key
     if endGame:
         out = composeMessage(MessageType.EXIT_GAME_CLIENT, user_id=USER_ID, game_id=GAME_ID)
         sendMessage(out)
