@@ -229,8 +229,10 @@ DISPLAY.blit(PLAYER2, (2 + (SIZE_X * POINT_SIZE) / 2, SIZE_Y * POINT_SIZE + 2))
 last_key = "r"
 last_update = time.time()
 
+endGame=False
 
 def check_last_pressed_key(last_key):
+    global endGame
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
@@ -241,6 +243,8 @@ def check_last_pressed_key(last_key):
                 return "u"
             elif event.key == pygame.K_DOWN:
                 return "d"
+            elif event.key == pygame.K_ESCAPE:
+                endGame=True
     return last_key
 
 
@@ -259,6 +263,17 @@ while True:
         # print("out", out)
         sendMessage(out)
         last_last_key = last_key
+    if endGame:
+        out = composeMessage(MessageType.EXIT_GAME_CLIENT, user_id=USER_ID, game_id=GAME_ID)
+        sendMessage(out)
+        inp = getMessage()
+        if messageType(inp, MessageType.EXIT_GAME_SERVER):
+            if messageOK(inp):
+                break
+            else:
+                print("Nie udało się opuścić gry.")
+        else:
+            print("Uzyskano inny typ odpowiedzi niż oczekiwano. Koniec programu.")
     pygame.display.update()
     FramePerSec.tick(FPS)
     # print("GAME")
@@ -294,7 +309,10 @@ while True:
                 print("error")
             last_update = time.time()
 
+if input["p1_over"] or input["p2_over"]:
+    print("Przegrana! ",end="")
+
 if is_player_1:
-	print("Przegrana! Punkty:",input["pt1"])
+    print("Punkty:",input["pt1"])
 else:
-	print("Przegrana! Punkty:",input["pt2"])
+    print("Punkty:",input["pt2"])
