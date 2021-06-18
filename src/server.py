@@ -390,6 +390,7 @@ def main():
         t1.start()
         t2 = threading.Thread(target=udp_server_multi_client.check_games, daemon=True)
         t2.start()
+        print("petla")
 
 
 if __name__ == '__main__':
