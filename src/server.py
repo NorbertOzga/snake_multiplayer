@@ -65,7 +65,7 @@ class UDPServer:
         # send response to the client
 
         self.printwt(f'[ RESPONSE to {client_address} ]')
-        sock.sendall(resp)
+        sock.send(resp)
 
     def wait_for_client(self, sock, client_address):
         """ Wait for a client """
