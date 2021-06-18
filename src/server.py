@@ -168,6 +168,9 @@ class UDPServer:
             self.games[game_id]["player_2"] = -1
 
         self.games[game_id]["players_num"] -= 1
+        if self.games[game_id]["players_num"] == 0:
+            del self.games[game_id]
+            del self.queue[game_id]
 
         header = Header(sender=0, message_type=MessageType.EXIT_GAME_SERVER)
         body = Body()
