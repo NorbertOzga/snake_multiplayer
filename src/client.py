@@ -37,7 +37,7 @@ def drawPoints(player1_points, player2_points):
 
 
 # Connecting
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.settimeout(0.1)
 SERVER = (SERVER_ADDRESS, SERVER_PORT)
 

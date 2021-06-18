@@ -24,12 +24,12 @@ class UDPServer:
 
     def configure_server(self):
         ''' Configure the server '''
-        # create UDP socket with IPv4 addressing
+        # create UDP socket with IPv4 addressingchek
 
         self.printwt('Creating socket...')
         self.printwt('Socket created')
         # bind server to the address
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.printwt(f'Binding server to {self.host}:{self.port}...')
         self.sock.bind((self.host, self.port))
         self.sock.settimeout(0.2)
@@ -321,7 +321,6 @@ class UDPServer:
         return snake
 
     def check_collisions(self, s1, s2):
-        print(s1, s2)
         p1_collision, p2_collision = 0, 0
         if s1:
             if s1[0][0] < 0 or s1[0][0] > self.game_shape[0] or s1[0][1] < 0 or s1[0][1] > self.game_shape[1]:
