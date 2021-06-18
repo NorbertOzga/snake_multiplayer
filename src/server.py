@@ -73,6 +73,7 @@ class UDPServer:
         sock.send(resp)
 
     def wait_for_client(self, sock, client_address):
+        self.socket = sock
         """ Wait for a client """
         while True:
             # receive message from a client
@@ -361,8 +362,7 @@ class UDPServer:
                 self.process_game(game_id)
                 resp = self.game_state(game_id)
 
-                for host in hosts:
-                    self.sock.sendto(resp, host)
+                self.socket.send(resp)
                 try:
                     self.queue[game_id][0] = time.time()
                 except KeyError:
@@ -387,8 +387,8 @@ def main():
         client_sock, addr = udp_server_multi_client.sock.accept()
         t1 = threading.Thread(target=udp_server_multi_client.wait_for_client, args=[client_sock, addr], daemon=True)
         t1.start()
-        #t2 = threading.Thread(target=udp_server_multi_client.check_games, daemon=True)
-        #t2.start()
+        t2 = threading.Thread(target=udp_server_multi_client.check_games, daemon=True)
+        t2.start()
 
 
 if __name__ == '__main__':

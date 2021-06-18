@@ -100,6 +100,7 @@ def getMessage(returnNone=False):
             data = sock.recv(1024)
         print("data", data)
         unpacked = Message.from_bytes(data)
+        print(unpacked.body.data)
     except socket.timeout as e:
         print("error")
         if returnNone:
