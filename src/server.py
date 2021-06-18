@@ -37,7 +37,7 @@ class UDPServer:
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.printwt(f'Binding server to {self.host}:{self.port}...')
         self.sock.bind((self.host, self.port))
-        #self.sock.listen(1)
+        self.sock.listen(1)
         self.printwt(f'Server binded to {self.host}:{self.port}')
 
     def handle_request(self, data, client_address, sock):
