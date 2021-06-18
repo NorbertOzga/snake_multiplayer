@@ -88,6 +88,7 @@ def composeMessage(message_type=None, nickname=None, user_id=None, \
 
 # Sending messages
 def sendMessage(message):
+    print("send", message)
     sock.send(message)
 
 
@@ -96,6 +97,7 @@ def getMessage(returnNone=False):
     unpacked = None
     try:
         data = sock.recv(1024)
+        print("data", data)
         unpacked = Message.from_bytes(data)
     except socket.timeout as e:
         print("error")
