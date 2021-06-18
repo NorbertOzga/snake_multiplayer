@@ -95,7 +95,9 @@ def sendMessage(message):
 def getMessage(returnNone=False):
     unpacked = None
     try:
-        data = sock.recv(1024)
+        data = b''
+        while not data:
+            data = sock.recv(1024)
         print("data", data)
         unpacked = Message.from_bytes(data)
     except socket.timeout as e:
@@ -140,7 +142,7 @@ while True:
     else:
         print("Uzyskano inny typ odpowiedzi niż oczekiwano. Koniec programu.")
         exit(1)
-
+time.sleep(1)
 # Gets current game list
 while True:
     sendMessage(composeMessage(MessageType.LIST_GAMES_CLIENT, user_id=USER_ID))
