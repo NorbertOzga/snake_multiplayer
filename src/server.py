@@ -61,6 +61,7 @@ class UDPServer:
             resp = self.exit_game(req.body.data)
         elif req.header.message_type == MessageType.SEND_MOVE:
             self.store_move(req.body.data)
+            self.check_games()
             return
         else:
             resp = {
@@ -81,6 +82,7 @@ class UDPServer:
             data = sock.recv(1024)
             # handle client's request
             self.handle_request(data, client_address, sock)
+
 
 
     def shutdown_server(self):
