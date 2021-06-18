@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 # Import section
+import threading
+
 import pygame
 from pygame.locals import *
 import sys
@@ -19,16 +21,11 @@ MYNAME = ""
 # Points
 def drawPoints(player1_points, player2_points):
     # Clear HUD
-    pygame.draw.rect(DISPLAY, BLACK, \
-                     (72, \
-                      SIZE_Y * POINT_SIZE, \
-                      (SIZE_X * POINT_SIZE) / 2 - 72, \
-                      32))
-    pygame.draw.rect(DISPLAY, BLACK, \
-                     (72 + (SIZE_X * POINT_SIZE) / 2, \
-                      SIZE_Y * POINT_SIZE, \
-                      (SIZE_X * POINT_SIZE) - 72 - (SIZE_X * POINT_SIZE) / 2, \
-                      32))
+    pygame.draw.rect(DISPLAY, BLACK,
+                     (72, SIZE_Y * POINT_SIZE, (SIZE_X * POINT_SIZE) / 2 - 72, 32))
+    pygame.draw.rect(DISPLAY, BLACK,
+                     (72 + (SIZE_X * POINT_SIZE) / 2, SIZE_Y * POINT_SIZE,
+                      (SIZE_X * POINT_SIZE) - 72 - (SIZE_X * POINT_SIZE) / 2, 32))
     # Prepare and display points
     P1_PT = font.render(str(player1_points).zfill(8), True, WHITE)
     DISPLAY.blit(P1_PT, (74, SIZE_Y * POINT_SIZE + 2))
@@ -41,6 +38,8 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.settimeout(5)
 SERVER = (SERVER_ADDRESS, SERVER_PORT)
 sock.connect(SERVER)
+
+
 
 # Draw initial points
 # drawPoints(0,0)
@@ -232,7 +231,8 @@ DISPLAY.blit(PLAYER2, (2 + (SIZE_X * POINT_SIZE) / 2, SIZE_Y * POINT_SIZE + 2))
 last_key = "r"
 last_update = time.time()
 
-endGame=False
+endGame = False
+
 
 def check_last_pressed_key(last_key):
     global endGame
@@ -247,7 +247,7 @@ def check_last_pressed_key(last_key):
             elif event.key == pygame.K_DOWN:
                 return "d"
             elif event.key == pygame.K_ESCAPE:
-                endGame=True
+                endGame = True
     return last_key
 
 
@@ -313,9 +313,9 @@ while True:
             last_update = time.time()
 
 if input["p1_over"] or input["p2_over"]:
-    print("Przegrana! ",end="")
+    print("Przegrana! ", end="")
 
 if is_player_1:
-    print("Punkty:",input["pt1"])
+    print("Punkty:", input["pt1"])
 else:
-    print("Punkty:",input["pt2"])
+    print("Punkty:", input["pt2"])

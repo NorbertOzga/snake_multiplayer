@@ -5,11 +5,16 @@ import time
 from venom import *
 import threading
 
+games = {}  # list of current games
+users = {}  # "IP": "user ID"
+game_shape = (25, 25)
+queue = {}
+
 class UDPServer:
-    games = {}  # list of current games
-    users = {}  # "IP": "user ID"
+    games = games  # list of current games
+    users = users  # "IP": "user ID"
     game_shape = (25, 25)
-    queue = {}
+    queue = queue
 
     def __init__(self, host, port):
         self.host = host
@@ -66,6 +71,7 @@ class UDPServer:
 
         self.printwt(f'[ RESPONSE to {client_address} ]')
         sock.send(resp)
+        sock.close()
 
     def wait_for_client(self, sock, client_address):
         """ Wait for a client """
