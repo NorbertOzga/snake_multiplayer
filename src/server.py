@@ -94,14 +94,14 @@ class UDPServer:
                 self.users[user_id] = nickname
                 header = Header(sender=0, message_type=MessageType.LOGIN_SERVER)
                 body = Body()
-                body.data["operation_success"] = b'\x20'
+                body.data["operation_success"] = True
                 body.data["user_id"] = user_id
                 message = Message(header=header, body=body)
                 return message.to_bytes()
 
         body = Body()
         header = Header(sender=0, message_type=MessageType.LOGIN_SERVER)
-        body.data["operation_success"] = b'\x50'
+        body.data["operation_success"] = False
         message = Message(header=header, body=body)
         return message.to_bytes()
 
@@ -148,14 +148,14 @@ class UDPServer:
 
             header = Header(sender=0, message_type=MessageType.JOIN_GAME_SERVER)
             body = Body()
-            body.data["operation_success"] = b'\x20'
+            body.data["operation_success"] = True
             body.data["is_player_1"] = is_player_1
             message = Message(header=header, body=body)
             return message.to_bytes()
         else:
             header = Header(sender=0, message_type=MessageType.JOIN_GAME_SERVER)
             body = Body()
-            body.data["operation_success"] = b'\x50'
+            body.data["operation_success"] = False
             message = Message(header=header, body=body)
             return message.to_bytes()
 
