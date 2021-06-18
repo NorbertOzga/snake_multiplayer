@@ -368,6 +368,9 @@ class UDPServer:
                     self.queue[game_id][0] = time.time()
                 except KeyError:
                     continue
+            else:
+                resp = self.game_state(game_id)
+                self.socket.send(resp)
 
         to_remove = []
         for game_id in self.queue.keys():
@@ -388,9 +391,7 @@ def main():
         client_sock, addr = udp_server_multi_client.sock.accept()
         t1 = threading.Thread(target=udp_server_multi_client.wait_for_client, args=[client_sock, addr], daemon=True)
         t1.start()
-        t2 = threading.Thread(target=udp_server_multi_client.check_games, daemon=True)
-        t2.start()
-        print("petla")
+
 
 
 if __name__ == '__main__':
