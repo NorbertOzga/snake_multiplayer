@@ -257,7 +257,11 @@ class UDPServer:
 
     def store_move(self, data):
         game_id = data["game_id"]
-        current_game = self.games[game_id]
+        try:
+            current_game = self.games[game_id]
+        except KeyError:
+            return
+
         if current_game["player_1"] == data["user_id"]:
             current_game["p1_direction"] = data["move"].decode("ascii")
         elif current_game["player_2"] == data["user_id"]:
