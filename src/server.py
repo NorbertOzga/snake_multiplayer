@@ -3,10 +3,10 @@ from datetime import datetime
 import random
 import time
 from venom import *
+import threading
 from _thread import *
 import os
 import ssl
-
 
 games = {}  # list of current games
 users = {}  # "IP": "user ID"
@@ -29,6 +29,7 @@ class UDPServer:
         os.system(f'''echo "[{current_date_time}] {msg}" >> logs.txt''')
 
     def handle_request(self, data, client_address, sock):
+
         ''' Handle the client '''
         # handle request
         if not data:
@@ -387,8 +388,10 @@ def main():
     mean_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     mean_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     mean_socket.bind(('0.0.0.0', 10000))
+    mean_socket.listen(2)
 
     ThreadCount = 0
+    #udp_server_multi_client.configure_server()
     while True:
         Client, address = mean_socket.accept()
         secure_sock = ssl.wrap_socket(Client, server_side=True, ca_certs="client.pem", certfile="server.pem",
