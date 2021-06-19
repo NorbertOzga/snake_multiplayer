@@ -386,7 +386,8 @@ def main():
     """ Create a UDP Server and handle multiple clients simultaneously """
     mean_socket = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
     mean_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    mean_socket.bind(('0.0.0.0', 10000))
+    ip_address = '0.0.0.0'
+    mean_socket.bind((list(map(int, ip_address.split('.'))), 10000))
     mean_socket.listen(2)
 
     ThreadCount = 0
