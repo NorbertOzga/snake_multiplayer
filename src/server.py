@@ -73,15 +73,11 @@ class UDPServer:
             # receive message from a client
             data = sock.read(1024)
             # handle client's request
-            try:
-                self.handle_request(data, client_address, sock)
-            except:
-                break
 
+            self.handle_request(data, client_address, sock)
 
     def shutdown_server(self):
         """ Shutdown the server """
-
         self.printwt('Shutting down server...')
         self.sock.close()
 

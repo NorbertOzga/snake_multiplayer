@@ -86,13 +86,6 @@
       <option name="presentableId" value="Default" />
       <updated>1623322941530</updated>
     </task>
-    <task id="LOCAL-00131" summary="zmiany">
-      <created>1623924596177</created>
-      <option name="number" value="00131" />
-      <option name="presentableId" value="LOCAL-00131" />
-      <option name="project" value="LOCAL" />
-      <updated>1623924596177</updated>
-    </task>
     <task id="LOCAL-00132" summary="eencrypt/decrpt implementation">
       <created>1623936309328</created>
       <option name="number" value="00132" />
@@ -429,7 +422,14 @@
       <option name="project" value="LOCAL" />
       <updated>1624111561743</updated>
     </task>
-    <option name="localTasksCounter" value="180" />
+    <task id="LOCAL-00180" summary="add new server/client keys">
+      <created>1624111759413</created>
+      <option name="number" value="00180" />
+      <option name="presentableId" value="LOCAL-00180" />
+      <option name="project" value="LOCAL" />
+      <updated>1624111759413</updated>
+    </task>
+    <option name="localTasksCounter" value="181" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -457,7 +457,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="uncomment one line" />
     <MESSAGE value="change success to response in return message" />
     <MESSAGE value="add invoke process_game function after receive store_move request" />
     <MESSAGE value="new print in server" />
@@ -482,6 +481,7 @@
     <MESSAGE value="add privet keys" />
     <MESSAGE value="delete generate keys from code" />
     <MESSAGE value="change TLS protocol" />
-    <option name="LAST_COMMIT_MESSAGE" value="change TLS protocol" />
+    <MESSAGE value="add new server/client keys" />
+    <option name="LAST_COMMIT_MESSAGE" value="add new server/client keys" />
   </component>
 </project>
