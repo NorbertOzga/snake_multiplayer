@@ -54,7 +54,7 @@ class UDPServer:
         elif req.header.message_type == MessageType.CREATE_GAME_CLIENT:
             resp = self.create_game(req.body.data)
         elif req.header.message_type == MessageType.JOIN_GAME_CLIENT:
-            resp = self.join_game(req.body.data, client_address)
+            resp = self.join_game(req.body.data, client_address[0])
         elif req.header.message_type == MessageType.EXIT_GAME_CLIENT:
             resp = self.exit_game(req.body.data)
         elif req.header.message_type == MessageType.SEND_MOVE:
@@ -135,6 +135,7 @@ class UDPServer:
 
     def join_game(self, data, client_address):
         game_id = data["game_id"]
+        users[client_address] = game_id
         if games[game_id]["players_num"] < 2:
             if games[game_id]["player_1"] == -1:
                 games[game_id]["player_1"] = data["user_id"]
@@ -188,9 +189,9 @@ class UDPServer:
     def game_state(self, game_id):
         print(games[game_id])
 
-        if games[game_id]["player_1"] == users[self.client_address] and games[game_id]["p1_over"]:
+        if games[game_id]["player_1"] == users[self.client_address[0]] and games[game_id]["p1_over"]:
             self.close_sock = True
-        elif games[game_id]["player_2"] == users[self.client_address] and games[game_id]["p2_over"]:
+        elif games[game_id]["player_2"] == users[self.client_address[0]] and games[game_id]["p2_over"]:
             self.close_sock = True
 
         if game_id in games.keys():
