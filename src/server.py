@@ -400,7 +400,7 @@ def main():
         Client, address = mean_socket.accept()
         secure_sock = ssl.wrap_socket(Client, server_side=True, ca_certs="client.pem", certfile="server.pem",
                                       keyfile="server.key", cert_reqs=ssl.CERT_REQUIRED,
-                                      ssl_version=ssl.DTLSv1_METHOD)
+                                      ssl_version=ssl.PROTOCOL_TLSv1_2)
         print('Connected to: ' + address[0] + ':' + str(address[1]))
         cert = secure_sock.getpeercert()
         if not cert or ('commonName', 'SNAKE') not in cert['subject'][5]:
