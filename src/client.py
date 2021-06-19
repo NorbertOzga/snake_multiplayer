@@ -19,12 +19,6 @@ SERVER_ADDRESS = "20.86.147.135"
 SERVER_PORT = 10000
 MYNAME = ""
 
-def create_key():
-    os.system('''openssl req -new -x509 -days 365 -nodes -out client.pem -keyout client.key -subj "/C=PL/ST=Lublin/L=Lublin/O=PAS-Snake/OU=IT Department/CN=SNAKE" ''')
-
-def create_key1():
-    os.system('''openssl req -new -x509 -days 365 -nodes -out server.pem -keyout server.key -subj "/C=PL/ST=Lublin/L=Lublin/O=PAS-Snake/OU=IT Department/CN=SNAKE" ''')
-
 
 # Points
 def drawPoints(player1_points, player2_points):
@@ -42,8 +36,6 @@ def drawPoints(player1_points, player2_points):
 
 
 # Connecting
-create_key()
-create_key1()
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.setblocking(1)
 SERVER = (SERVER_ADDRESS, SERVER_PORT)

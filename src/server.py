@@ -13,9 +13,6 @@ users = {}  # "IP": "user ID"
 game_shape = (25, 25)
 queue = {}
 
-def create_key():
-    os.system('''openssl req -new -x509 -days 365 -nodes -out server.pem -keyout server.key -subj "/C=PL/ST=Lublin/L=Lublin/O=PAS-Snake/OU=IT Department/CN=SNAKE" ''')
-
 class UDPServer:
     game_shape = (25, 25)
 
@@ -392,7 +389,6 @@ class UDPServer:
 
 def main():
     """ Create a UDP Server and handle multiple clients simultaneously """
-    create_key()
     mean_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     mean_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     mean_socket.bind(('0.0.0.0', 10000))
