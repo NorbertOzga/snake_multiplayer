@@ -42,7 +42,7 @@ class Body:
         body = Body()
 
         if message_type == MessageType.SEND_MOVE:
-            user_id, game_id, move = struct.unpack("!HHc", body_bytes)
+            user_id, game_id, move = struct.unpack("!hhc", body_bytes)
 
             body.data["user_id"] = user_id
             body.data["game_id"] = game_id
@@ -51,18 +51,18 @@ class Body:
         elif message_type == MessageType.SEND_STATE:
             game_id, p1_direction, p2_direction, food_x, \
             food_y, pt1, pt2, players_num, p1_over, p2_over = struct.unpack(
-                "!Hcc5H??", body_bytes[:16]
+                "!hcc5h??", body_bytes[:16]
             )
-            p1_snake_len, p2_snake_len = struct.unpack("!HH", body_bytes[16:20])
+            p1_snake_len, p2_snake_len = struct.unpack("!hh", body_bytes[16:20])
             p1_snake = ()
             p2_snake = ()
             if p1_snake_len > 0:
                 p1_snake = struct.unpack(
-                    f"!{p1_snake_len*2}H", body_bytes[20:(p1_snake_len * 4)+ 20]
+                    f"!{p1_snake_len*2}h", body_bytes[20:(p1_snake_len * 4)+ 20]
                 )
             if p2_snake_len > 0:
                 p2_snake = struct.unpack(
-                    f"!{p2_snake_len*2}H",
+                    f"!{p2_snake_len*2}h",
                     body_bytes[
                         (p1_snake_len * 4) + 20: (p2_snake_len * 4) + (p1_snake_len * 4) + 20
                     ],
@@ -100,17 +100,17 @@ class Body:
             if not operation_success:
                 pass
 
-            user_id, = struct.unpack("!H", body_bytes[1:3])
+            user_id, = struct.unpack("!h", body_bytes[1:3])
 
             body.data["user_id"] = user_id
 
         elif message_type == MessageType.LIST_GAMES_CLIENT:
-            user_id, = struct.unpack("!H", body_bytes)
+            user_id, = struct.unpack("!h", body_bytes)
 
             body.data["user_id"] = user_id
 
         elif message_type == MessageType.LIST_GAMES_SERVER:
-            games_num, = struct.unpack("!H", body_bytes[:2])
+            games_num, = struct.unpack("!h", body_bytes[:2])
 
             body.data["games"] = []
             last_byte_num = 2
@@ -133,37 +133,37 @@ class Body:
 
 
         elif message_type == MessageType.JOIN_GAME_CLIENT:
-            user_id, game_id = struct.unpack("!HH", body_bytes[:4])
+            user_id, game_id = struct.unpack("!hh", body_bytes[:4])
 
             body.data["user_id"] = user_id
             body.data["game_id"] = game_id
 
         elif message_type == MessageType.JOIN_GAME_SERVER:
-            operation_success, is_player_1 = struct.unpack("!HH", body_bytes)
+            operation_success, is_player_1 = struct.unpack("!h", body_bytes)
 
             body.data["operation_success"] = True if operation_success == 0x20 else False
             body.data["is_player_1"] = True if is_player_1 == 1 else False
 
         elif message_type == MessageType.CREATE_GAME_CLIENT:
-            user_id, game_name_len = struct.unpack("!HH", body_bytes[:4])
+            user_id, game_name_len = struct.unpack("!hh", body_bytes[:4])
             game_name = body_bytes[4:game_name_len+4].decode("ascii")
 
             body.data["user_id"] = user_id
             body.data["game_name"] = game_name
 
         elif message_type == MessageType.CREATE_GAME_SERVER:
-            game_id, = struct.unpack("!H", body_bytes)
+            game_id, = struct.unpack("!h", body_bytes)
 
             body.data["game_id"] = game_id
 
         elif message_type == MessageType.EXIT_GAME_CLIENT:
-            user_id, game_id = struct.unpack("!HH", body_bytes)
+            user_id, game_id = struct.unpack("!hh", body_bytes)
 
             body.data["user_id"] = user_id
             body.data["game_id"] = game_id
 
         elif message_type == MessageType.EXIT_GAME_SERVER:
-            operation_success = struct.unpack("!H", body_bytes)
+            operation_success = struct.unpack("!h", body_bytes)
 
             body.data["operation_success"] = True if operation_success == 0x20 else False
 
@@ -175,7 +175,7 @@ class Body:
     def to_bytes(self, message_type: MessageType) -> bytes:
         if message_type == MessageType.SEND_MOVE:
             return struct.pack(
-                "!HHc",
+                "!hhc",
                 self.data["user_id"],
                 self.data["game_id"],
                 self.data["move"],
@@ -185,7 +185,7 @@ class Body:
             response = b""
 
             response += struct.pack(
-                "!Hcc5H??",
+                "!hcc5h??",
                 self.data["game_id"],
                 self.data["p1_direction"],
                 self.data["p2_direction"],
@@ -198,15 +198,15 @@ class Body:
                 self.data["p2_over"],
             )
             response += struct.pack(
-                "!HH", len(self.data["p1_snake"]), len(self.data["p2_snake"])
+                "!hh", len(self.data["p1_snake"]), len(self.data["p2_snake"])
             )
             print("snake1", self.data["p1_snake"])
             print("snake2", self.data["p2_snake"])
 
             for i in range(len(self.data["p1_snake"])):
-                response += struct.pack("!HH", self.data["p1_snake"][i][0], self.data["p1_snake"][i][1])
+                response += struct.pack("!hh", self.data["p1_snake"][i][0], self.data["p1_snake"][i][1])
             for i in range(len(self.data["p2_snake"])):
-                response += struct.pack("!HH", self.data["p2_snake"][i][0], self.data["p2_snake"][i][1])
+                response += struct.pack("!hh", self.data["p2_snake"][i][0], self.data["p2_snake"][i][1])
 
             return response
 
@@ -218,21 +218,21 @@ class Body:
 
         elif message_type == MessageType.LOGIN_SERVER:
             response = b"\x20" if self.data["operation_success"] else b"\x50"
-            response += struct.pack("!H", self.data["user_id"])
+            response += struct.pack("!h", self.data["user_id"])
 
             return response
 
         elif message_type == MessageType.LIST_GAMES_CLIENT:
-            response = struct.pack("!H", self.data["user_id"])
+            response = struct.pack("!h", self.data["user_id"])
 
             return response
 
         elif message_type == MessageType.LIST_GAMES_SERVER:
-            response = struct.pack("!H", len(self.data["games"]))
+            response = struct.pack("!h", len(self.data["games"]))
 
             for game in self.data["games"]:
                 response += struct.pack(
-                    "!H?b",
+                    "!h?b",
                     game["game_id"],
                     game["can_join"],
                     len(game["game_name"]),
@@ -242,35 +242,35 @@ class Body:
             return response
 
         elif message_type == MessageType.JOIN_GAME_CLIENT:
-            return struct.pack("!HH", self.data["user_id"], self.data["game_id"])
+            return struct.pack("!hh", self.data["user_id"], self.data["game_id"])
 
         elif message_type == MessageType.JOIN_GAME_SERVER:
 
             response = struct.pack(
-                "!HH",
+                "!hh",
                 0x20 if self.data["operation_success"] else 0x50,
                 1 if self.data["is_player_1"] else 0)
 
             return response
 
         elif message_type == MessageType.CREATE_GAME_CLIENT:
-            response = struct.pack("!HH", self.data["user_id"], len(self.data["game_name"]))
+            response = struct.pack("!hh", self.data["user_id"], len(self.data["game_name"]))
             response += self.data["game_name"].encode("ascii")
 
             return response
 
         elif message_type == MessageType.CREATE_GAME_SERVER:
-            response = struct.pack("!H", self.data["game_id"])
+            response = struct.pack("!h", self.data["game_id"])
 
             return response
         
         elif message_type == MessageType.EXIT_GAME_CLIENT:
-            response = struct.pack("!HH", self.data["user_id"], self.data["game_id"])
+            response = struct.pack("!hh", self.data["user_id"], self.data["game_id"])
 
             return response
 
         elif message_type == MessageType.EXIT_GAME_SERVER:
-            response = struct.pack("!H", 0x20 if self.data["operation_success"] else 0x50)
+            response = struct.pack("!h", 0x20 if self.data["operation_success"] else 0x50)
 
             return response
 
