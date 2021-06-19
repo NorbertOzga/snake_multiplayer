@@ -29,7 +29,6 @@ class UDPServer:
         os.system(f'''echo "[{current_date_time}] {msg}" >> logs.txt''')
 
     def handle_request(self, data, client_address, sock):
-
         ''' Handle the client '''
         # handle request
         if not data:
