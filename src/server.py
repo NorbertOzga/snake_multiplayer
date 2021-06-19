@@ -387,7 +387,6 @@ def main():
     mean_socket = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
     mean_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     ip_address = '0.0.0.0'
-    ip_address = '123.45.67.89'
     numbers = list(map(int, ip_address.split('.')))
     ip_address = '2002:{:02x}{:02x}:{:02x}{:02x}::'.format(*numbers)
     mean_socket.bind((ip_address, 10000))
