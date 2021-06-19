@@ -2,8 +2,8 @@
 
 # Import section
 import threading
-import pygame
-from pygame.locals import *
+#import pygame
+#from pygame.locals import *
 import sys
 import socket
 import json
