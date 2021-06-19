@@ -366,7 +366,7 @@ class UDPServer:
         if now - recive_time > 0.2:
             self.process_game(game_id)
             resp = self.game_state(game_id)
-            self.socket.write(resp)
+            self.socket.write(resp.to_bytes())
             try:
                 queue[game_id][0] = time.time()
             except KeyError:
