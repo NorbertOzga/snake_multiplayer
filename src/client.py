@@ -292,6 +292,7 @@ while True:
                 print("Nie udało się opuścić gry.")
         else:
             print("Uzyskano inny typ odpowiedzi niż oczekiwano. Koniec programu.")
+            exit(0)
     pygame.display.update()
     FramePerSec.tick(FPS)
     # print("GAME")
