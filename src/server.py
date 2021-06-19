@@ -387,11 +387,28 @@ def main():
     mean_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     mean_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     mean_socket.bind(('0.0.0.0', 10000))
+    sockv6 = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
+    sockv6.bind(('::', 10000))
     mean_socket.listen(2)
-
+    sockv6.listen(2)
     ThreadCount = 0
     while True:
         Client, address = mean_socket.accept()
+        secure_sock = ssl.wrap_socket(Client, server_side=True, ca_certs="client.pem", certfile="server.pem",
+                                      keyfile="server.key", cert_reqs=ssl.CERT_REQUIRED,
+                                      ssl_version=ssl.PROTOCOL_TLSv1_2)
+        print('Connected to: ' + address[0] + ':' + str(address[1]))
+        cert = secure_sock.getpeercert()
+        if not cert or ('commonName', 'SNAKE') not in cert['subject'][5]:
+            raise Exception("ERROR")
+
+        udp_server_multi_client = UDPServer()
+        start_new_thread(udp_server_multi_client.wait_for_client, (secure_sock, address))
+
+        ThreadCount += 1
+        print('Thread Number: ' + str(ThreadCount))
+
+        Client, address = sockv6.accept()
         secure_sock = ssl.wrap_socket(Client, server_side=True, ca_certs="client.pem", certfile="server.pem",
                                       keyfile="server.key", cert_reqs=ssl.CERT_REQUIRED,
                                       ssl_version=ssl.PROTOCOL_TLSv1_2)
