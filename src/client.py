@@ -6,10 +6,6 @@ import socket
 import time
 from venom import *
 import ssl
-import ipaddress
-
-def convertusingipaddress(ipv4address):
-    print(ipaddress.IPv6Address('2002::' + ipv4address).compressed)
 
 # Server and its address configuration
 SERVER_ADDRESS = "20.93.184.26"
