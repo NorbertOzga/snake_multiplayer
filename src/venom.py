@@ -200,8 +200,6 @@ class Body:
             response += struct.pack(
                 "!hh", len(self.data["p1_snake"]), len(self.data["p2_snake"])
             )
-            print("snake1", self.data["p1_snake"])
-            print("snake2", self.data["p2_snake"])
 
             for i in range(len(self.data["p1_snake"])):
                 response += struct.pack("!hh", self.data["p1_snake"][i][0], self.data["p1_snake"][i][1])
