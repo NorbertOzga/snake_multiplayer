@@ -44,7 +44,7 @@ class UDPServer:
 
         req = Message.from_bytes(data)
         self.printwt(f'[ REQUEST from {client_address} ]')
-        print('\n', req, '\n')
+        print('\n', req.body.data, '\n')
 
         if req.header.message_type == MessageType.LOGIN_CLIENT:
             resp = self.register_user(req.body.data)
@@ -181,6 +181,7 @@ class UDPServer:
         return message.to_bytes()
 
     def game_state(self, game_id):
+        print(games[game_id])
         if game_id in games.keys():
             header = Header(sender=0, message_type=MessageType.SEND_STATE)
             body = Body()
