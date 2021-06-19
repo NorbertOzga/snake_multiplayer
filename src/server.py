@@ -3,7 +3,6 @@ from datetime import datetime
 import random
 import time
 from venom import *
-import ipaddress
 from _thread import *
 import os
 import ssl
@@ -391,7 +390,6 @@ def main():
     mean_socket.listen(2)
 
     ThreadCount = 0
-    #udp_server_multi_client.configure_server()
     while True:
         Client, address = mean_socket.accept()
         secure_sock = ssl.wrap_socket(Client, server_side=True, ca_certs="client.pem", certfile="server.pem",

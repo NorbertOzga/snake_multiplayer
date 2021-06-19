@@ -9,7 +9,7 @@ import ssl
 import ipaddress
 
 def convertusingipaddress(ipv4address):
-    return ipaddress.IPv6Address('2002::' + ipv4address).compressed
+    print(ipaddress.IPv6Address('2002::' + ipv4address).compressed)
 
 # Server and its address configuration
 SERVER_ADDRESS = "20.86.147.135"
@@ -32,9 +32,9 @@ def drawPoints(player1_points, player2_points):
 
 
 # Connecting
-sock = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.setblocking(1)
-SERVER = (convertusingipaddress(SERVER_ADDRESS), SERVER_PORT, 0, 0)
+SERVER = (SERVER_ADDRESS, SERVER_PORT)
 sock.connect(SERVER)
 
 context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
