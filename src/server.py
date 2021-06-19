@@ -27,7 +27,6 @@ class UDPServer:
 
         current_date_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         os.system(f'''echo "[{current_date_time}] {msg}" >> logs.txt''')
-        print(f'[{current_date_time}] {msg}')
 
     def handle_request(self, data, client_address, sock):
 
@@ -38,7 +37,6 @@ class UDPServer:
             return
         req = Message.from_bytes(data)
         self.printwt(f'[ REQUEST from {client_address} "Message type: {req.header.message_type}]')
-        print('\n', req.body.data, '\n')
 
         if req.header.message_type == MessageType.LOGIN_CLIENT:
             resp = self.register_user(req.body.data)
@@ -179,7 +177,6 @@ class UDPServer:
         return message
 
     def game_state(self, game_id):
-        print(games[game_id])
 
         if games[game_id]["player_1"] == users[self.client_address[0]] and games[game_id]["p1_over"]:
             self.close_sock = True
@@ -360,7 +357,6 @@ class UDPServer:
         return False, False, food
 
     def check_games(self, game_id):
-        print("check_games")
         now = time.time()
         recive_time, hosts = queue[game_id]
         if now - recive_time > 0.2:

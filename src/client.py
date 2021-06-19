@@ -158,7 +158,7 @@ while True:
     else:
         print("Uzyskano inny typ odpowiedzi niż oczekiwano. Koniec programu.")
         exit(1)
-time.sleep(1)
+
 # Gets current game list
 while True:
     sendMessage(composeMessage(MessageType.LIST_GAMES_CLIENT, user_id=USER_ID))
