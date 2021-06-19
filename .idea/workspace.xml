@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dca0d820-b0ca-4433-8362-0c165423a124" name="Default Changelist" comment="repair client">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/client.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/client.py" afterDir="false" />
-    </list>
+    <list default="true" id="dca0d820-b0ca-4433-8362-0c165423a124" name="Default Changelist" comment="repair client" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -88,27 +85,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1623322941530</updated>
-    </task>
-    <task id="LOCAL-00128" summary="zmiany">
-      <created>1623924128667</created>
-      <option name="number" value="00128" />
-      <option name="presentableId" value="LOCAL-00128" />
-      <option name="project" value="LOCAL" />
-      <updated>1623924128667</updated>
-    </task>
-    <task id="LOCAL-00129" summary="zmiany">
-      <created>1623924144950</created>
-      <option name="number" value="00129" />
-      <option name="presentableId" value="LOCAL-00129" />
-      <option name="project" value="LOCAL" />
-      <updated>1623924144950</updated>
-    </task>
-    <task id="LOCAL-00130" summary="zmiany">
-      <created>1623924472292</created>
-      <option name="number" value="00130" />
-      <option name="presentableId" value="LOCAL-00130" />
-      <option name="project" value="LOCAL" />
-      <updated>1623924472292</updated>
     </task>
     <task id="LOCAL-00131" summary="zmiany">
       <created>1623924596177</created>
@@ -432,7 +408,28 @@
       <option name="project" value="LOCAL" />
       <updated>1624111162957</updated>
     </task>
-    <option name="localTasksCounter" value="177" />
+    <task id="LOCAL-00177" summary="add privet keys">
+      <created>1624111374003</created>
+      <option name="number" value="00177" />
+      <option name="presentableId" value="LOCAL-00177" />
+      <option name="project" value="LOCAL" />
+      <updated>1624111374003</updated>
+    </task>
+    <task id="LOCAL-00178" summary="delete generate keys from code">
+      <created>1624111471443</created>
+      <option name="number" value="00178" />
+      <option name="presentableId" value="LOCAL-00178" />
+      <option name="project" value="LOCAL" />
+      <updated>1624111471443</updated>
+    </task>
+    <task id="LOCAL-00179" summary="change TLS protocol">
+      <created>1624111561743</created>
+      <option name="number" value="00179" />
+      <option name="presentableId" value="LOCAL-00179" />
+      <option name="project" value="LOCAL" />
+      <updated>1624111561743</updated>
+    </task>
+    <option name="localTasksCounter" value="180" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -460,9 +457,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add some prints to show tlogs" />
-    <MESSAGE value="correct register_user argument, and handle nickname from request" />
-    <MESSAGE value="probably working snake version" />
     <MESSAGE value="uncomment one line" />
     <MESSAGE value="change success to response in return message" />
     <MESSAGE value="add invoke process_game function after receive store_move request" />
@@ -485,6 +479,9 @@
     <MESSAGE value="Change to TCP protocol." />
     <MESSAGE value="Change to TCP protocol with threading." />
     <MESSAGE value="change server logic" />
-    <option name="LAST_COMMIT_MESSAGE" value="change server logic" />
+    <MESSAGE value="add privet keys" />
+    <MESSAGE value="delete generate keys from code" />
+    <MESSAGE value="change TLS protocol" />
+    <option name="LAST_COMMIT_MESSAGE" value="change TLS protocol" />
   </component>
 </project>
