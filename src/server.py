@@ -4,7 +4,7 @@ import random
 import time
 from venom import *
 import threading
-
+from _thread import *
 games = {}  # list of current games
 users = {}  # "IP": "user ID"
 game_shape = (25, 25)
@@ -13,9 +13,9 @@ queue = {}
 class UDPServer:
     game_shape = (25, 25)
 
-    def __init__(self, host, port):
-        self.host = host
-        self.port = port
+    def __init__(self):
+        #self.host = host
+        #self.port = port
         self.sock = None  # Connection socket
 
     def printwt(self, msg):
@@ -384,13 +384,21 @@ class UDPServer:
 def main():
     """ Create a UDP Server and handle multiple clients simultaneously """
 
-    udp_server_multi_client = UDPServer('0.0.0.0', 10000)
-    udp_server_multi_client.configure_server()
+    mean_socket = socket.socket()
+    mean_socket.bind(('0.0.0.0', 10000))
+    mean_socket.listen(2)
+    ThreadCount = 0
+    #udp_server_multi_client.configure_server()
     while True:
-        client_sock, addr = udp_server_multi_client.sock.accept()
-        t1 = threading.Thread(target=udp_server_multi_client.wait_for_client, args=[client_sock, addr], daemon=True)
-        t1.start()
+        Client, address = mean_socket.accept()
+        print('Connected to: ' + address[0] + ':' + str(address[1]))
 
+
+        udp_server_multi_client = UDPServer()
+        start_new_thread(udp_server_multi_client.wait_for_client, (Client, address))
+
+        ThreadCount += 1
+        print('Thread Number: ' + str(ThreadCount))
 
 
 if __name__ == '__main__':
