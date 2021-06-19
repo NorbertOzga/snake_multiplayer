@@ -59,7 +59,7 @@ class UDPServer:
             resp = self.exit_game(req.body.data)
         elif req.header.message_type == MessageType.SEND_MOVE:
             self.store_move(req.body.data)
-            self.check_games()
+            self.check_games(req.body.data["game_id"])
             return
         else:
             resp = {
@@ -75,6 +75,7 @@ class UDPServer:
 
     def wait_for_client(self, sock, client_address):
         self.socket = sock
+        self.client_address = client_address
         """ Wait for a client """
         while True:
             # receive message from a client
@@ -186,6 +187,12 @@ class UDPServer:
 
     def game_state(self, game_id):
         print(games[game_id])
+
+        if games[game_id]["player_1"] == users[self.client_address] and games[game_id]["p1_over"]:
+            self.close_sock = True
+        elif games[game_id]["player_2"] == users[self.client_address] and games[game_id]["p2_over"]:
+            self.close_sock = True
+
         if game_id in games.keys():
             header = Header(sender=0, message_type=MessageType.SEND_STATE)
             body = Body()
@@ -358,24 +365,21 @@ class UDPServer:
 
         return False, False, food
 
-    def check_games(self):
+    def check_games(self, game_id):
         print("check_games")
         now = time.time()
-        for game_id in queue.keys():
-            recive_time, hosts = queue[game_id]
-            if now - recive_time > 0.2:
-                self.process_game(game_id)
-                resp = self.game_state(game_id)
-                if not self.close_sock:
-                    self.socket.send(resp)
-                try:
-                    queue[game_id][0] = time.time()
-                except KeyError:
-                    continue
-            else:
-                resp = self.game_state(game_id)
-                if not self.close_sock:
-                    self.socket.send(resp)
+        recive_time, hosts = queue[game_id]
+        if now - recive_time > 0.2:
+            self.process_game(game_id)
+            resp = self.game_state(game_id)
+            self.socket.send(resp)
+            try:
+                queue[game_id][0] = time.time()
+            except KeyError:
+                pass
+        else:
+            resp = self.game_state(game_id)
+            self.socket.send(resp)
 
         to_remove = []
         for game_id in queue.keys():
@@ -385,6 +389,8 @@ class UDPServer:
         for game_id in to_remove:
             del games[game_id]
             del queue[game_id]
+        if self.close_sock:
+            self.socket.sloce()
 
 
 def main():
