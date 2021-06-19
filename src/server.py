@@ -176,7 +176,7 @@ class UDPServer:
         if games[game_id]["players_num"] == 0:
             del games[game_id]
             del queue[game_id]
-            self.close_sock = True
+
 
         header = Header(sender=0, message_type=MessageType.EXIT_GAME_SERVER)
         body = Body()
@@ -366,15 +366,16 @@ class UDPServer:
             if now - recive_time > 0.2:
                 self.process_game(game_id)
                 resp = self.game_state(game_id)
-
-                self.socket.send(resp)
+                if not self.close_sock:
+                    self.socket.send(resp)
                 try:
                     queue[game_id][0] = time.time()
                 except KeyError:
                     continue
             else:
                 resp = self.game_state(game_id)
-                self.socket.send(resp)
+                if not self.close_sock:
+                    self.socket.send(resp)
 
         to_remove = []
         for game_id in queue.keys():
