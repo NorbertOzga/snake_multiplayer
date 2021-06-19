@@ -26,6 +26,7 @@ class UDPServer:
         ''' Print message with current date and time '''
 
         current_date_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        os.system(f'''echo "[{current_date_time}] {msg}" >> logs.txt''')
         print(f'[{current_date_time}] {msg}')
 
     def handle_request(self, data, client_address, sock):
