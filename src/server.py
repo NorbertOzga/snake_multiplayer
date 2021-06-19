@@ -17,6 +17,7 @@ class UDPServer:
         #self.host = host
         #self.port = port
         self.sock = None  # Connection socket
+        self.close_sock = False
 
     def printwt(self, msg):
         ''' Print message with current date and time '''
@@ -69,6 +70,8 @@ class UDPServer:
 
         self.printwt(f'[ RESPONSE to {client_address} ]')
         sock.send(resp)
+        if self.close_sock:
+            sock.close()
 
     def wait_for_client(self, sock, client_address):
         self.socket = sock
@@ -173,6 +176,7 @@ class UDPServer:
         if games[game_id]["players_num"] == 0:
             del games[game_id]
             del queue[game_id]
+            self.close_sock = True
 
         header = Header(sender=0, message_type=MessageType.EXIT_GAME_SERVER)
         body = Body()
