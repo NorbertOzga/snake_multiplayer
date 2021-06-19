@@ -44,7 +44,7 @@ SERVERv6=(SERVER_ADDRESSv6,SERVER_PORT,0,0) # IPv6 tuple
 print("Witaj w grze snake! :)\nWybierz rodzaj połączenia z serwerem:")
 
 while True:
-    which4or6=input("[4] IPv4\t[6] IPv6\t[Q] Wyjście\t?")
+    which4or6=input("[4] IPv4\t[6] IPv6\t[Q] Wyjście\t?\t")
     if which4or6=='4':
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
