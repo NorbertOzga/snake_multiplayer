@@ -3,10 +3,13 @@ from datetime import datetime
 import random
 import time
 from venom import *
-import threading
+import ipaddress
 from _thread import *
 import os
 import ssl
+
+def convertusingipaddress(ipv4address):
+    return ipaddress.IPv6Address('2002::' + ipv4address).compressed
 
 games = {}  # list of current games
 users = {}  # "IP": "user ID"
@@ -386,7 +389,7 @@ def main():
     """ Create a UDP Server and handle multiple clients simultaneously """
     mean_socket = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
     mean_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    mean_socket.bind(('0.0.0.0', 10000))
+    mean_socket.bind((convertusingipaddress('0.0.0.0'), 10000))
     mean_socket.listen(2)
 
     ThreadCount = 0
