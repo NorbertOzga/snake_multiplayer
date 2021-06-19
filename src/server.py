@@ -78,8 +78,9 @@ class UDPServer:
         self.client_address = client_address
         """ Wait for a client """
         while True:
+            if self.close_sock:
+                break
             # receive message from a client
-
             data = sock.recv(1024)
             # handle client's request
             self.handle_request(data, client_address, sock)
