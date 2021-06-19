@@ -15,7 +15,7 @@ import os
 import ssl
 
 # Server and its address configuration
-SERVER_ADDRESS = "20.86.147.135"
+SERVER_ADDRESS = "20.93.184.26"
 SERVER_PORT = 10000
 MYNAME = ""
 
@@ -83,9 +83,6 @@ def composeMessage(message_type=None, nickname=None, user_id=None, \
                    game_name=None, game_id=None, d=None):
     header = Header(sender=1, message_type=message_type)
     body = Body()
-
-    temp = {}
-    temp["sender"] = 1
     if nickname:
         body.data["nickname"] = nickname
     if user_id:
@@ -102,7 +99,7 @@ def composeMessage(message_type=None, nickname=None, user_id=None, \
 
 # Sending messages
 def sendMessage(message):
-    print("send", message)
+    # print("send", message)
     sock.write(message)
 
 
@@ -113,9 +110,9 @@ def getMessage(returnNone=False):
         data = b''
         while not data:
             data = sock.read(1024)
-        print("data", data)
+        # print("data", data)
         unpacked = Message.from_bytes(data)
-        print(unpacked.body.data)
+        # print(unpacked.body.data)
     except socket.timeout as e:
         print("error")
         if returnNone:
