@@ -2,8 +2,8 @@
 
 # Import section
 import threading
-#import pygame
-# from pygame.locals import *
+import pygame
+from pygame.locals import *
 import sys
 import socket
 import json
@@ -14,9 +14,9 @@ import os
 import ssl
 
 # Server and its address configuration
-SERVER_ADDRESS = "20.93.184.26" # IPv4 address
-SERVER_ADDRESSv6="2603:1020:203:3::319"
-SERVER_PORT = 10000             # server port
+SERVER_ADDRESS = "20.93.184.26"         # IPv4 address
+SERVER_ADDRESSv6="2603:1020:203:3::319" # IPv6 address
+SERVER_PORT = 10000                     # server port
 
 # Player name
 MYNAME = ""
@@ -36,11 +36,36 @@ def drawPoints(player1_points, player2_points):
     DISPLAY.blit(P2_PT, (74 + (SIZE_X * POINT_SIZE) / 2, SIZE_Y * POINT_SIZE + 2))
 
 # Connecting
-sock = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
+
+SERVER = (SERVER_ADDRESS, SERVER_PORT)      # IPv4 tuple
+SERVERv6=(SERVER_ADDRESSv6,SERVER_PORT,0,0) # IPv6 tuple
+
+# Client connection question and welcome
+print("Witaj w grze snake! :)\nWybierz rodzaj połączenia z serwerem:")
+
+while True:
+    which4or6=input("[4] IPv4\t[6] IPv6\t[Q] Wyjście\t?")
+    if which4or6=='4':
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.connect(SERVER)
+            break
+        except:
+            print("Nie udało się zestawić połączenia, spróbuj wybrać inny typ.")
+    elif which4or6=='6':
+        try:
+            sock = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
+            sock.connect(SERVERv6)
+            break
+        except:
+            print("Nie udało się zestawić połączenia, spróbuj wybrać inny typ.")
+    elif which4or6.upper()=='Q':
+        print("No to koniec programu. :)")
+        exit(0)
+    else:
+        print("Wybierz obsługiwany typ połączenia.")
+
 sock.setblocking(1)
-SERVER = (SERVER_ADDRESS, SERVER_PORT)      # IPv4
-SERVERv6=(SERVER_ADDRESSv6,SERVER_PORT,0,0) # IPv6
-sock.connect(SERVERv6)
 
 # SSL context creation
 context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
