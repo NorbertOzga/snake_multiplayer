@@ -32,7 +32,9 @@ class UDPServer:
 
         ''' Handle the client '''
         # handle request
-
+        if not data:
+            self.close_sock = True
+            return
         req = Message.from_bytes(data)
         self.printwt(f'[ REQUEST from {client_address} ]')
         print('\n', req.body.data, '\n')
