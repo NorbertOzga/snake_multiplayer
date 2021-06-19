@@ -5,10 +5,16 @@ import time
 from venom import *
 import threading
 from _thread import *
+import os
+import ssl
+
 games = {}  # list of current games
 users = {}  # "IP": "user ID"
 game_shape = (25, 25)
 queue = {}
+
+def create_key():
+    os.system('''openssl req -new -x509 -days 365 -nodes -out server.pem -keyout server.key -subj "/C=PL/ST=Lublin/L=Lublin/O=PAS-Snake/OU=IT Department/CN=SNAKE" ''')
 
 class UDPServer:
     game_shape = (25, 25)
@@ -24,19 +30,6 @@ class UDPServer:
 
         current_date_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         print(f'[{current_date_time}] {msg}')
-
-    def configure_server(self):
-        ''' Configure the server '''
-        # create UDP socket with IPv4 addressingchek
-
-        self.printwt('Creating socket...')
-        self.printwt('Socket created')
-        # bind server to the address
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.printwt(f'Binding server to {self.host}:{self.port}...')
-        self.sock.bind((self.host, self.port))
-        self.sock.listen(3)
-        self.printwt(f'Server binded to {self.host}:{self.port}')
 
     def handle_request(self, data, client_address, sock):
 
@@ -69,7 +62,7 @@ class UDPServer:
         # send response to the client
 
         self.printwt(f'[ RESPONSE to {client_address} ]')
-        sock.send(resp)
+        sock.write(resp)
         if self.close_sock:
             sock.close()
 
@@ -81,7 +74,7 @@ class UDPServer:
             if self.close_sock:
                 break
             # receive message from a client
-            data = sock.recv(1024)
+            data = sock.read(1024)
             # handle client's request
             try:
                 self.handle_request(data, client_address, sock)
@@ -376,14 +369,14 @@ class UDPServer:
         if now - recive_time > 0.2:
             self.process_game(game_id)
             resp = self.game_state(game_id)
-            self.socket.send(resp)
+            self.socket.write(resp)
             try:
                 queue[game_id][0] = time.time()
             except KeyError:
                 pass
         else:
             resp = self.game_state(game_id)
-            self.socket.send(resp)
+            self.socket.write(resp)
 
         to_remove = []
         for game_id in queue.keys():
@@ -399,19 +392,26 @@ class UDPServer:
 
 def main():
     """ Create a UDP Server and handle multiple clients simultaneously """
-
-    mean_socket = socket.socket()
+    create_key()
+    mean_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    mean_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     mean_socket.bind(('0.0.0.0', 10000))
     mean_socket.listen(2)
+
     ThreadCount = 0
     #udp_server_multi_client.configure_server()
     while True:
         Client, address = mean_socket.accept()
+        secure_sock = ssl.wrap_socket(Client, server_side=True, ca_certs="client.pem", certfile="server.pem",
+                                      keyfile="server.key", cert_reqs=ssl.CERT_REQUIRED,
+                                      ssl_version=ssl.DTLSv1_METHOD)
         print('Connected to: ' + address[0] + ':' + str(address[1]))
-
+        cert = secure_sock.getpeercert()
+        if not cert or ('commonName', 'SNAKE') not in cert['subject'][5]:
+            raise Exception("ERROR")
 
         udp_server_multi_client = UDPServer()
-        start_new_thread(udp_server_multi_client.wait_for_client, (Client, address))
+        start_new_thread(udp_server_multi_client.wait_for_client, (secure_sock, address))
 
         ThreadCount += 1
         print('Thread Number: ' + str(ThreadCount))

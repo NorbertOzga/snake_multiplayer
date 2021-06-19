@@ -11,11 +11,16 @@ import json
 import time
 import errno
 from venom import *
+import os
+import ssl
 
 # Server and its address configuration
 SERVER_ADDRESS = "20.86.147.135"
 SERVER_PORT = 10000
 MYNAME = ""
+
+def create_key():
+    os.system('''openssl req -new -x509 -days 365 -nodes -out client.pem -keyout client.key -subj "/C=PL/ST=Lublin/L=Lublin/O=PAS-Snake/OU=IT Department/CN=SNAKE" ''')
 
 
 # Points
@@ -34,13 +39,28 @@ def drawPoints(player1_points, player2_points):
 
 
 # Connecting
+create_key()
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.settimeout(3)
+sock.setblocking(1)
 SERVER = (SERVER_ADDRESS, SERVER_PORT)
 sock.connect(SERVER)
 
+context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+context.verify_mode = ssl.CERT_REQUIRED
+context.load_verify_locations('server.pem')
+context.load_cert_chain(certfile="client.pem", keyfile="client.key")
 
+if ssl.HAS_SNI:
+    secure_sock = context.wrap_socket(sock, server_side=False, server_hostname=SERVER[0])
+else:
+    secure_sock = context.wrap_socket(sock, server_side=False)
 
+cert = secure_sock.getpeercert()
+
+if not cert or ('commonName', 'SNAKE') not in cert['subject'][5]:
+    raise Exception("ERROR")
+
+sock = secure_sock
 # Draw initial points
 # drawPoints(0,0)
 
@@ -88,7 +108,7 @@ def composeMessage(message_type=None, nickname=None, user_id=None, \
 # Sending messages
 def sendMessage(message):
     print("send", message)
-    sock.send(message)
+    sock.write(message)
 
 
 # Properly getting messages
@@ -97,7 +117,7 @@ def getMessage(returnNone=False):
     try:
         data = b''
         while not data:
-            data = sock.recv(1024)
+            data = sock.read(1024)
         print("data", data)
         unpacked = Message.from_bytes(data)
         print(unpacked.body.data)
