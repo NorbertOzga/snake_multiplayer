@@ -391,7 +391,7 @@ class UDPServer:
             del games[game_id]
             del queue[game_id]
         if self.close_sock:
-            self.socket.sloce()
+            self.socket.close()
 
 
 def main():
