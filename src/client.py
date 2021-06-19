@@ -15,6 +15,7 @@ import ssl
 
 # Server and its address configuration
 SERVER_ADDRESS = "20.93.184.26" # IPv4 address
+SERVER_ADDRESSv6="2603:1020:203:3::319"
 SERVER_PORT = 10000             # server port
 
 # Player name
@@ -35,10 +36,11 @@ def drawPoints(player1_points, player2_points):
     DISPLAY.blit(P2_PT, (74 + (SIZE_X * POINT_SIZE) / 2, SIZE_Y * POINT_SIZE + 2))
 
 # Connecting
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
 sock.setblocking(1)
-SERVER = (SERVER_ADDRESS, SERVER_PORT)
-sock.connect(SERVER)
+SERVER = (SERVER_ADDRESS, SERVER_PORT)      # IPv4
+SERVERv6=(SERVER_ADDRESSv6,SERVER_PORT,0,0) # IPv6
+sock.connect(SERVERv6)
 
 # SSL context creation
 context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
