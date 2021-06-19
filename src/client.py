@@ -34,7 +34,7 @@ def drawPoints(player1_points, player2_points):
 # Connecting
 sock = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
 sock.setblocking(1)
-SERVER = (convertusingipaddress(SERVER_ADDRESS), SERVER_PORT)
+SERVER = (convertusingipaddress(SERVER_ADDRESS), SERVER_PORT, 0, 0)
 sock.connect(SERVER)
 
 context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
